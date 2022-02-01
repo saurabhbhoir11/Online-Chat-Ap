@@ -106,7 +106,7 @@
                 android:layout_marginBottom="10dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="- Sign In Via -"
+                android:text="- Login Via -"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -129,7 +129,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@drawable/common_google_signin_btn_icon_dark_normal_background"
+                        android:background="@drawable/google_back"
                         android:gravity="center"
                         android:orientation="horizontal">
 
