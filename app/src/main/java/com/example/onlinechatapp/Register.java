@@ -3,7 +3,9 @@ package com.example.onlinechatapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import com.example.onlinechatapp.databinding.ActivityRegisterBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -27,16 +29,21 @@ public class Register extends AppCompatActivity {
         firestore=FirebaseFirestore.getInstance();
 
 
-        auth.createUserWithEmailAndPassword(binding.email.getText().toString(),binding.pass.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        /*auth.createUserWithEmailAndPassword(binding.email.getText().toString(),binding.pass.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
-                    FirebaseUser firebaseUser=new FirebaseUser() {
-                    }
+
                 }
             }
+        });*/
+
+        binding.clickToLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Register.this,Login.class));
+                finish();
+            }
         });
-
-
     }
 }

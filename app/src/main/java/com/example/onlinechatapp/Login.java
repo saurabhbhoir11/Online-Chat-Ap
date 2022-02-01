@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.onlinechatapp.databinding.ActivityLoginBinding;
@@ -23,7 +24,7 @@ public class Login extends AppCompatActivity {
         setContentView(binding.getRoot());
         auth=FirebaseAuth.getInstance();
 
-        auth.signInWithEmailAndPassword(binding.email.getText().toString,binding.pass.getText().toString).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+        /*auth.signInWithEmailAndPassword(binding.email.getText().toString,binding.pass.getText().toString).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
             @Override
             public void onSuccess(AuthResult authResult) {
                 if(auth.getCurrentUser().isEmailVerified()){
@@ -32,6 +33,13 @@ public class Login extends AppCompatActivity {
                 else{
                     Toast.makeText(Login.this, "Please Verify Your Email", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });*/
+        binding.clickToRegister.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Login.this,Register.class));
+                finish();
             }
         });
 
