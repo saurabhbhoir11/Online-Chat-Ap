@@ -24,17 +24,23 @@ public class Login extends AppCompatActivity {
         setContentView(binding.getRoot());
         auth=FirebaseAuth.getInstance();
 
-        /*auth.signInWithEmailAndPassword(binding.email.getText().toString,binding.pass.getText().toString).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+        binding.loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onSuccess(AuthResult authResult) {
-                if(auth.getCurrentUser().isEmailVerified()){
-                    startActivity(new Intent(Login.this,MainActivity.class));
-                }
-                else{
-                    Toast.makeText(Login.this, "Please Verify Your Email", Toast.LENGTH_SHORT).show();
-                }
+            public void onClick(View view) {
+                auth.signInWithEmailAndPassword(binding.email1.getText().toString(),binding.pass1.getText().toString()).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
+                    @Override
+                    public void onSuccess(AuthResult authResult) {
+                        if(auth.getCurrentUser().isEmailVerified()){
+                            startActivity(new Intent(Login.this,MainActivity.class));
+                        }
+                        else{
+                            Toast.makeText(Login.this, "Please Verify Your Email", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
-        });*/
+        });
+
         binding.clickToRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

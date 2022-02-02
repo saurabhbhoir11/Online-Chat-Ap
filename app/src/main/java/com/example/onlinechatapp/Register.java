@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.onlinechatapp.databinding.ActivityRegisterBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -19,29 +20,41 @@ public class Register extends AppCompatActivity {
     ActivityRegisterBinding binding;
     FirebaseAuth auth;
     FirebaseFirestore firestore;
+    FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        binding=ActivityRegisterBinding.inflate(getLayoutInflater());
+        binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         super.onCreate(savedInstanceState);
         setContentView(binding.getRoot());
-        auth=FirebaseAuth.getInstance();
-        firestore=FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
+        firestore = FirebaseFirestore.getInstance();
 
-
-        /*auth.createUserWithEmailAndPassword(binding.email.getText().toString(),binding.pass.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        binding.registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
+            public void onClick(View view) {
+                auth.createUserWithEmailAndPassword(binding.email.getText().toString(), binding.pass.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            user.sendEmailVerification();
+                            Toast.makeText(Register.this, "Verification Link sent to "+binding.email.getText() , Toast.LENGTH_SHORT).show();
+                            user = auth.getCurrentUser();
 
-                }
+                            startActivity(new Intent(Register.this, MainActivity.class));
+
+                        }
+                    }
+                });
             }
-        });*/
+        });
+
 
         binding.clickToLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(Register.this,Login.class));
+
+                startActivity(new Intent(Register.this, Login.class));
                 finish();
             }
         });
