@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "933779368906",
+    "project_id": "chatar-f7477",
+    "storage_bucket": "chatar-f7477.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:933779368906:android:02c59b432705f3d6e97d33",
+        "android_client_info": {
+          "package_name": "com.example.onlinechatapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "933779368906-p5vlkrrt0mbas6q8lcde1ipcjdv7b84o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRSh_tZk6KOKnk5-OJgsw_7yhCJ9kj4jE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "933779368906-p5vlkrrt0mbas6q8lcde1ipcjdv7b84o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
