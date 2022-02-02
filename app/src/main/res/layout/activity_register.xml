@@ -55,7 +55,7 @@
                 android:paddingLeft="10dp" />
 
             <EditText
-                android:id="@+id/pass"
+                android:id="@+id/password"
                 android:layout_width="match_parent"
                 android:layout_height="51dp"
                 android:layout_marginTop="8px"
@@ -108,7 +108,7 @@
         <TextView
             android:id="@+id/textView2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="163dp"
             android:layout_marginBottom="10dp"
             android:layout_weight="1"
             android:gravity="center"
@@ -203,7 +203,7 @@
                             android:layout_marginBottom="5dp"
                             android:scaleType="fitXY"
                             android:src="@android:drawable/stat_sys_phone_call"
-                            android:tint="#A3A3A3" />
+                            app:tint="#A3A3A3" />
 
                         <TextView
                             android:id="@+id/textView3"
