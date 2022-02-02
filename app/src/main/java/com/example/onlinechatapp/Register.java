@@ -34,16 +34,16 @@ public class Register extends AppCompatActivity {
         binding.registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(binding.password.getText().toString() != binding.confPass.getText().toString()){
-                    binding.confPass.setError("The Passwords does not match");
+                if (binding.email.getText().toString().isEmpty()) {
+                    binding.email.setError("Please enter an email");
                     return;
                 }
                 else if (binding.password.getText().length() < 6 ){
                     binding.password.setError("The Password must be at least 6 characters");
                     return;
                 }
-                else if (binding.email.getText().toString().isEmpty()) {
-                    binding.email.setError("Please enter an email");
+                else if(!binding.password.getText().equals(binding.confPass.getText())){
+                    binding.confPass.setError("The Passwords does not match");
                     return;
                 }
                 else {
