@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.onlinechatapp.databinding.ActivityRegisterBinding;
 import com.example.onlinechatapp.models.Users;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,22 +43,31 @@ public class Register extends AppCompatActivity {
                     binding.password.setError("The Password must be at least 6 characters");
                     return;
                 }
-                else if(!binding.password.getText().equals(binding.confPass.getText())){
+                /*else if(!binding.password.getText().equals(binding.confPass.getText())){
                     binding.confPass.setError("The Passwords does not match");
                     return;
-                }
+                }*/
                 else {
                     auth.createUserWithEmailAndPassword(binding.email.getText().toString(), binding.password.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                user.sendEmailVerification();
-                                Toast.makeText(Register.this, "Verification Link sent to " + binding.email.getText(), Toast.LENGTH_SHORT).show();
                                 user = auth.getCurrentUser();
-                                Users users = new Users(binding.email.getText().toString(), binding.password.getText().toString());
-                                users.setUserid(user.getUid());
-                                firestore.collection("Users").document(user.getUid()).set(users);
-                                startActivity(new Intent(Register.this, MainActivity.class));
+                                user.sendEmailVerification().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                        Toast.makeText(Register.this, "Verification Link sent to " + binding.email.getText(), Toast.LENGTH_SHORT).show();
+                                        Users users = new Users(binding.email.getText().toString(), binding.password.getText().toString());
+                                        users.setUserid(user.getUid());
+                                        firestore.collection("Users").document(user.getUid()).set(users).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void unused) {
+                                                Toast.makeText(Register.this, "Data Added To Database", Toast.LENGTH_SHORT).show();
+                                                startActivity(new Intent(Register.this, usernameactivity.class));
+                                            }
+                                        });
+                                    }
+                                });
 
                             }
                         }
