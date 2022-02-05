@@ -40,30 +40,32 @@ public class usernameactivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if(!binding.username.getText().toString().isEmpty()){
-                    Query usernameQuery = firestore.collection("Users").orderBy("username").whereEqualTo("",binding.username.getText().toString());
+                    Query usernameQuery = firestore.collection("Users").whereEqualTo("username",binding.username.getText().toString());
                     usernameQuery.addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                            binding.progressBar.setVisibility(View.VISIBLE);
-                            if(value.getDocuments().size()>1){
-                                binding.errorMsg.setVisibility(View.VISIBLE);
-                                binding.progressBar.setVisibility(View.GONE);
-                                binding.tickImg.setVisibility(View.GONE);
-                            }
-                            else{
-                                binding.errorMsg.setVisibility(View.GONE);
-                                binding.progressBar.setVisibility(View.GONE);
-                                binding.tickImg.setVisibility(View.VISIBLE);
+                            for(DocumentSnapshot ds: value){
+                                binding.progressBar.setVisibility(View.VISIBLE);
+                                if(ds.exists()){
+                                    binding.errorMsg.setVisibility(View.VISIBLE);
+                                    binding.progressBar.setVisibility(View.GONE);
+                                    binding.tickImg.setVisibility(View.GONE);
+                                }
+                                else{
+                                    binding.errorMsg.setVisibility(View.GONE);
+                                    binding.progressBar.setVisibility(View.GONE);
+                                    binding.tickImg.setVisibility(View.VISIBLE);
 
-                                HashMap<String,Object> hashMap=new HashMap<>();
-                                hashMap.put("username",binding.username.getText().toString());
+                                    HashMap<String,Object> hashMap=new HashMap<>();
+                                    hashMap.put("username",binding.username.getText().toString());
 
-                                firestore.collection("Users").document(auth.getCurrentUser().getUid()).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void unused) {
-                                        startActivity(new Intent(usernameactivity.this,MainActivity.class));
-                                    }
-                                });
+                                    firestore.collection("Users").document(auth.getCurrentUser().getUid()).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            startActivity(new Intent(usernameactivity.this,MainActivity.class));
+                                        }
+                                    });
+                                }
                             }
                         }
                     });
