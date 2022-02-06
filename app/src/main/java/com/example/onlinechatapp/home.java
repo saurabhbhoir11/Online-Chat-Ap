@@ -2,6 +2,8 @@ package com.example.onlinechatapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import com.example.onlinechatapp.Adapter.FragmentsAdapter;
@@ -15,10 +17,14 @@ public class home extends AppCompatActivity {
         binding=ActivityHomeBinding.inflate(getLayoutInflater());
         super.onCreate(savedInstanceState);
         setContentView(binding.getRoot());
+        getSupportActionBar().setElevation(0);
 
-        getSupportActionBar().hide();
 
         binding.viewpager.setAdapter(new FragmentsAdapter(getSupportFragmentManager()));
         binding.tabLayout.setupWithViewPager(binding.viewpager);
+        binding.tabLayout.setSelectedTabIndicatorColor(Color.WHITE);
+        binding.tabLayout.setTabTextColors(Color.rgb(235, 250, 250),Color.WHITE);
+
+
     }
 }
