@@ -1,7 +1,7 @@
 package com.example.onlinechatapp.models;
 
 public class Users {
-    String profilepic, username, lastmsg, mail, userid,pass, tagline, time, status, follow;
+    String profilepic, username, lastmsg, mail, userid,pass, tagline, time, status, follow,name;
 
 
 
@@ -20,10 +20,11 @@ public class Users {
     }
     public Users(){}
 
-    public Users(String mail, String pass){
+    public Users(String name,String mail, String pass){
 
             this.mail = mail;
             this.pass = pass;
+            this.name=name;
     }
 
 
@@ -105,5 +106,13 @@ public class Users {
 
     public void setFollow(String follow) {
         this.follow = follow;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

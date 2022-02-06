@@ -23,6 +23,17 @@ public class Login extends AppCompatActivity {
         setContentView(binding.getRoot());
         auth=FirebaseAuth.getInstance();
 
+
+        if (auth.getCurrentUser() != null) {
+            if(!auth.getCurrentUser().isEmailVerified()) {
+                Toast.makeText(this, "Please Verify Email First", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Intent intent = new Intent(Login.this, home.class);
+                startActivity(intent);
+            }
+        }
+
         binding.loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -30,7 +41,7 @@ public class Login extends AppCompatActivity {
                     @Override
                     public void onSuccess(AuthResult authResult) {
                         if(auth.getCurrentUser().isEmailVerified()){
-                            startActivity(new Intent(Login.this,MainActivity.class));
+                            startActivity(new Intent(Login.this,home.class));
                         }
                         else{
                             Toast.makeText(Login.this, "Please Verify Your Email", Toast.LENGTH_SHORT).show();
