@@ -36,7 +36,7 @@
                 android:layout_height="45dp"
                 android:fontFamily="sans-serif-medium"
                 android:gravity="center_vertical"
-                android:text="TextView"
+                android:text="Text View"
                 android:textSize="26sp" />
 
         </LinearLayout>
