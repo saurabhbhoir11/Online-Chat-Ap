@@ -12,7 +12,6 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/profilrusername"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
@@ -24,7 +23,7 @@
                 android:gravity="center_vertical"
                 android:padding="10dp"
                 android:text="Name"
-                android:textColor="#2c2c2c"
+                android:textColor="#3A3A3A"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -41,6 +40,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="10dp"
                     android:padding="5dp"
+                    android:src="@drawable/checked"
                     app:civ_border_color="#FF000000"
                     app:civ_border_width="2dp" />
 
@@ -57,6 +57,7 @@
                         android:fontFamily="sans-serif-black"
                         android:padding="5dp"
                         android:text="00"
+                        android:textColor="#3A3A3A"
                         android:textSize="24sp" />
 
                     <TextView
@@ -74,7 +75,7 @@
                         android:layout_marginTop="5dp"
                         android:layout_marginRight="5dp"
                         android:layout_marginBottom="5dp"
-                        android:background="?android:attr/listDivider"
+                        android:background="#3A3A3A"
                         android:paddingTop="15dp" />
 
                     <TextView
@@ -84,6 +85,7 @@
                         android:fontFamily="sans-serif-black"
                         android:padding="5dp"
                         android:text="00"
+                        android:textColor="#3A3A3A"
                         android:textSize="24sp" />
 
                     <TextView
@@ -101,7 +103,9 @@
                 android:id="@+id/divider3"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="?android:attr/listDivider" />
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:background="#3A3A3A" />
 
             <TextView
                 android:id="@+id/textView17"
@@ -109,14 +113,32 @@
                 android:layout_height="28dp"
                 android:layout_margin="10dp"
                 android:text="Bio:"
-                android:textSize="20sp" />
+                android:textColor="#3A3A3A"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/user_bio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
-                android:text="TextView" />
+                android:text="TextView"
+                android:textColor="#3A3A3A" />
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="You May Also Know"
+                android:textColor="#3A3A3A"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp" />
 
         </LinearLayout>
 
