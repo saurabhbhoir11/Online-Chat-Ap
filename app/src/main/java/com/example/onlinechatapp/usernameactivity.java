@@ -29,6 +29,7 @@ public class usernameactivity extends AppCompatActivity {
     FirebaseFirestore firestore;
     int a=0;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         binding = ActivityUsernameactivityBinding.inflate(getLayoutInflater());
