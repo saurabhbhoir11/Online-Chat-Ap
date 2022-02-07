@@ -4,6 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -26,6 +27,7 @@ public class usernameactivity extends AppCompatActivity {
     ActivityUsernameactivityBinding binding;
     FirebaseAuth auth;
     FirebaseFirestore firestore;
+    int a=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,13 +49,14 @@ public class usernameactivity extends AppCompatActivity {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                             binding.progressBar.setVisibility(View.VISIBLE);
-
+                            a=0;
                             if (value.size()>0) {
                                 binding.errorMsg.setVisibility(View.VISIBLE);
                                 binding.progressBar.setVisibility(View.GONE);
                                 binding.tickImg.setVisibility(View.GONE);
+                                a=1;
                             }
-                            else {
+                            else if(a==0) {
                                 binding.errorMsg.setVisibility(View.GONE);
                                 binding.progressBar.setVisibility(View.GONE);
                                 binding.tickImg.setVisibility(View.VISIBLE);
@@ -61,13 +64,13 @@ public class usernameactivity extends AppCompatActivity {
                                 HashMap<String,Object> hashMap=new HashMap<>();
                                 hashMap.put("username",binding.username.getText().toString());
 
-                                firestore.collection("Users").document(auth.getCurrentUser().getUid()).update(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void unused) {
-                                        startActivity(new Intent(usernameactivity.this, home.class));
-                                        finish();
-                                    }
-                                });
+                                    firestore.collection("Users").document(auth.getCurrentUser().getUid()).update(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            startActivity(new Intent(usernameactivity.this, home.class));
+                                            finish();
+                                        }
+                                    });
                             }
                         }
                     });
