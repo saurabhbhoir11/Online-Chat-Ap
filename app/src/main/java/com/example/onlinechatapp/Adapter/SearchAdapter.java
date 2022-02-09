@@ -123,9 +123,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
-                image = itemView.findViewById(R.id.contpic);
-                UserName = itemView.findViewById(R.id.UserName);
-                follow = itemView.findViewById(R.id.follower);
+                image = itemView.findViewById(R.id.srch_img);
+                UserName = itemView.findViewById(R.id.username_srch);
+                follow = itemView.findViewById(R.id.flw_btn);
             }
         }
 }
