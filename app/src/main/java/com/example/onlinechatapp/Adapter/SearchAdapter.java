@@ -34,7 +34,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     FirebaseUser firebaseUser;
     FirebaseFirestore FirebaseDatabase;
 
-    public SearchAdapter(List<Users> list, Context context){
+    public SearchAdapter(List<Users> list, Context context) {
         this.list = (ArrayList<Users>) list;
         this.context = context;
     }
@@ -54,14 +54,14 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         isFollowed(users.getUserid(), holder.follow);
 
-        if(users.getUserid().equals(firebaseUser.getUid())){
+        if (users.getUserid().equals(firebaseUser.getUid())) {
             holder.follow.setVisibility(View.GONE);
         }
 
-        holder.follow.setOnClickListener(new View.OnClickListener(){
+        holder.follow.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view){
-                if(holder.follow.getText().toString().equals("Follow")){
+            public void onClick(View view) {
+                if (holder.follow.getText().toString().equals("Follow")) {
                     FirebaseDatabase.getInstance().collection("Follow")
                             .document(users.getUserid()).collection("following").document(users.getUserid())
                             .set(true);
@@ -69,8 +69,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                     FirebaseDatabase.getInstance().collection("Follow")
                             .document(users.getUserid()).collection("followers").document(users.getUserid())
                             .set(true);
-                }
-                else{
+                } else {
                     FirebaseDatabase.getInstance().collection("Follow")
                             .document(users.getUserid()).collection("following").document(users.getUserid())
                             .delete();
@@ -95,26 +94,25 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         });*/
     }
 
-    public void isFollowed(String userid, Button follow){
+    public void isFollowed(String userid, Button follow) {
         FirebaseDatabase.getInstance().collection("Follow")
                 .document(firebaseUser.getUid()).collection("following").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                if(value.getDocuments().()){
+                if (value.getDocuments().equals(userid)){
                     follow.setText("Following");
                 }
-                        else
+                else
                 {
                     follow.setText("Follow");
                 }
             }
-        })
-
-
+        });
+    }
 
 
         @Override
-        public int getItemCount() {
+        public int getItemCount () {
             return list.size();
         }
 
@@ -122,11 +120,12 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             ImageView image;
             TextView UserName;
             Button follow;
-            public ViewHolder(@NonNull View itemView){
+
+            public ViewHolder(@NonNull View itemView) {
                 super(itemView);
                 image = itemView.findViewById(R.id.contpic);
                 UserName = itemView.findViewById(R.id.UserName);
                 follow = itemView.findViewById(R.id.follower);
             }
         }
-    }
+}
