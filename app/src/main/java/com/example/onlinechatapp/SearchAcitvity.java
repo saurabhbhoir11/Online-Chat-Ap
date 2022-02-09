@@ -83,7 +83,7 @@ public class SearchAcitvity extends AppCompatActivity {
 
             }
         });
-
+//
         mUserDatabase.collection("Users").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
