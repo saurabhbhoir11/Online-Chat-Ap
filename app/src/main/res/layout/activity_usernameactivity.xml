@@ -36,7 +36,8 @@
             android:ems="10"
             android:hint="username"
             android:inputType="textPersonName"
-            android:padding="10dp" />
+            android:padding="10dp"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <ImageView
             android:id="@+id/tick_img"
