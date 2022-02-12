@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.onlinechatapp.OtherUserProfile;
@@ -54,9 +55,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         holder.UserName.setText(users.getUsername());
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        if (users.getUserid().equals(firebaseUser.getUid())) {
-            holder.follow.setVisibility(View.GONE);
-        }
 
        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,9 +65,15 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                 intent.putExtra("username", users.getUsername());
                 intent.putExtra("tagline", users.getTagline());
                 context.startActivity(intent);
-
             }
         });
+
+       holder.msg_btn.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               Toast.makeText(context, "Hello", Toast.LENGTH_SHORT).show();
+           }
+       });
     }
 
 
@@ -81,13 +85,13 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         public static class ViewHolder extends RecyclerView.ViewHolder {
             ImageView image;
             TextView UserName;
-            Button follow;
+            Button msg_btn;
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
                 image = itemView.findViewById(R.id.srch_img);
                 UserName = itemView.findViewById(R.id.username_srch);
-                follow = itemView.findViewById(R.id.flw_btn);
+                msg_btn = itemView.findViewById(R.id.flw_btn);
             }
         }
 }
