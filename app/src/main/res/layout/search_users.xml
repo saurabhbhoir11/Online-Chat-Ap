@@ -43,7 +43,8 @@
             <Button
                 android:id="@+id/flw_btn"
                 android:layout_width="110dp"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="Message" />
 
         </LinearLayout>
     </LinearLayout>

@@ -3,6 +3,7 @@ package com.example.onlinechatapp;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -81,7 +82,6 @@ public class SearchAcitvity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
 
-
             }
         });
 
@@ -92,7 +92,7 @@ public class SearchAcitvity extends AppCompatActivity {
                 assert value != null;
                 for (DocumentSnapshot value2 : value.getDocuments()) {
                     Users users = value2.toObject(Users.class);
-                    users.setUserid(value2.getData().toString());
+                    users.setUserid(value2.get("userid").toString());
                     if (!users.getUserid().equals(FirebaseAuth.getInstance().getUid())) {
                         list.add(users);
                     }

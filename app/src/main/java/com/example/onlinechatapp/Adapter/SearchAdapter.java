@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.onlinechatapp.OtherUserProfile;
 import com.example.onlinechatapp.R;
 import com.example.onlinechatapp.models.Users;
 import com.google.firebase.auth.FirebaseAuth;
@@ -52,60 +53,21 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         Glide.with(context).load(users.getProfilepic()).placeholder(R.drawable.user).into(holder.image);
         holder.UserName.setText(users.getUsername());
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        isFollowed(users.getUserid(), holder.follow);
 
         if (users.getUserid().equals(firebaseUser.getUid())) {
             holder.follow.setVisibility(View.GONE);
         }
 
-        holder.follow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (holder.follow.getText().toString().equals("Follow")) {
-                    FirebaseDatabase.getInstance().collection("Follow")
-                            .document(users.getUserid()).collection("following").document(users.getUserid())
-                            .set(true);
-
-                    FirebaseDatabase.getInstance().collection("Follow")
-                            .document(users.getUserid()).collection("followers").document(users.getUserid())
-                            .set(true);
-                } else {
-                    FirebaseDatabase.getInstance().collection("Follow")
-                            .document(users.getUserid()).collection("following").document(users.getUserid())
-                            .delete();
-
-                    FirebaseDatabase.getInstance().collection("Follow")
-                            .document(users.getUserid()).collection("followers").document(users.getUserid())
-                            .delete();
-                }
-            }
-        });
-       /* holder.itemView.setOnClickListener(new View.OnClickListener() {
+       holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, UserProfile.class);
+                Intent intent = new Intent(context, OtherUserProfile.class);
                 intent.putExtra("userId", users.getUserid());
                 intent.putExtra("profile", users.getProfilepic());
                 intent.putExtra("username", users.getUsername());
                 intent.putExtra("tagline", users.getTagline());
                 context.startActivity(intent);
 
-            }
-        });*/
-    }
-
-    public void isFollowed(String userid, Button follow) {
-        FirebaseDatabase.getInstance().collection("Follow")
-                .document(firebaseUser.getUid()).collection("following").addSnapshotListener(new EventListener<QuerySnapshot>() {
-            @Override
-            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                if (value.getDocuments().equals(userid)){
-                    follow.setText("Following");
-                }
-                else
-                {
-                    follow.setText("Follow");
-                }
             }
         });
     }

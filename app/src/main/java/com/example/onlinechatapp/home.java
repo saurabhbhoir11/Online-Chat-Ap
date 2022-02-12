@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 
 import com.example.onlinechatapp.Adapter.FragmentsAdapter;
@@ -16,7 +18,7 @@ public class home extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        binding=ActivityHomeBinding.inflate(getLayoutInflater());
+        binding = ActivityHomeBinding.inflate(getLayoutInflater());
         super.onCreate(savedInstanceState);
         setContentView(binding.getRoot());
         getSupportActionBar().setElevation(0);
@@ -25,13 +27,19 @@ public class home extends AppCompatActivity {
         binding.viewpager.setAdapter(new FragmentsAdapter(getSupportFragmentManager()));
         binding.tabLayout.setupWithViewPager(binding.viewpager);
         binding.tabLayout.setSelectedTabIndicatorColor(Color.WHITE);
-        binding.tabLayout.setTabTextColors(Color.rgb(235, 250, 250),Color.WHITE);
+        binding.tabLayout.setTabTextColors(Color.rgb(235, 250, 250), Color.WHITE);
 
         binding.floatingActionButton3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(home.this,SearchAcitvity.class));
+                startActivity(new Intent(home.this, SearchAcitvity.class));
             }
         });
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 }
