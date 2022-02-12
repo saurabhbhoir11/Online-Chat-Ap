@@ -11,20 +11,20 @@
         <entry key="..\:/Users/Sahil/AndroidStudioProjects/Online-Chat-Ap/app/src/main/res/layout/activity_home.xml" value="0.14666666666666667" />
         <entry key="..\:/Users/Sahil/AndroidStudioProjects/Online-Chat-Ap/app/src/main/res/layout/activity_login.xml" value="0.16666666666666666" />
         <entry key="..\:/Users/Sahil/AndroidStudioProjects/Online-Chat-Ap/app/src/main/res/layout/activity_main.xml" value="0.17552083333333332" />
-        <entry key="..\:/Users/Sahil/AndroidStudioProjects/Online-Chat-Ap/app/src/main/res/layout/activity_other_user_profile.xml" value="0.22" />
         <entry key="..\:/Users/Sahil/AndroidStudioProjects/Online-Chat-Ap/app/src/main/res/layout/activity_register.xml" value="0.3333333333333333" />
         <entry key="..\:/Users/Sahil/AndroidStudioProjects/Online-Chat-Ap/app/src/main/res/layout/activity_search_acitvity.xml" value="0.16666666666666666" />
         <entry key="..\:/Users/Sahil/AndroidStudioProjects/Online-Chat-Ap/app/src/main/res/layout/activity_usernameactivity.xml" value="0.14666666666666667" />
         <entry key="..\:/Users/Sahil/AndroidStudioProjects/Online-Chat-Ap/app/src/main/res/layout/flayout.xml" value="0.16666666666666666" />
         <entry key="..\:/Users/Sahil/AndroidStudioProjects/Online-Chat-Ap/app/src/main/res/layout/fragment_chat.xml" value="0.15989583333333332" />
         <entry key="..\:/Users/Sahil/AndroidStudioProjects/Online-Chat-Ap/app/src/main/res/layout/fragment_group.xml" value="0.15989583333333332" />
-        <entry key="..\:/Users/Sahil/AndroidStudioProjects/Online-Chat-Ap/app/src/main/res/layout/fragment_profile.xml" value="0.22" />
+        <entry key="..\:/Users/Sahil/AndroidStudioProjects/Online-Chat-Ap/app/src/main/res/layout/fragment_profile.xml" value="0.13333333333333333" />
         <entry key="..\:/Users/Sahil/AndroidStudioProjects/Online-Chat-Ap/app/src/main/res/layout/homepagelayout.xml" value="0.22" />
         <entry key="..\:/Users/Sahil/AndroidStudioProjects/Online-Chat-Ap/app/src/main/res/layout/search_users.xml" value="0.22" />
-        <entry key="..\:/Users/Sahil/AndroidStudioProjects/Online-Chat-Ap/app/src/main/res/menu/menu.xml" value="0.16666666666666666" />
         <entry key="..\:/Users/saura/AndroidStudioProjects/OnlineChatApp/app/src/main/res/layout/activity_login.xml" value="0.32971014492753625" />
         <entry key="..\:/Users/saura/AndroidStudioProjects/OnlineChatApp/app/src/main/res/layout/activity_main.xml" value="0.32971014492753625" />
+        <entry key="..\:/Users/saura/AndroidStudioProjects/OnlineChatApp/app/src/main/res/layout/activity_other_user_profile.xml" value="0.18802083333333333" />
         <entry key="..\:/Users/saura/AndroidStudioProjects/OnlineChatApp/app/src/main/res/layout/activity_register.xml" value="0.32971014492753625" />
+        <entry key="..\:/Users/saura/AndroidStudioProjects/OnlineChatApp/app/src/main/res/layout/activity_search_acitvity.xml" value="0.27853260869565216" />
       </map>
     </option>
   </component>
