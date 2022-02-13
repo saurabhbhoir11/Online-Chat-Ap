@@ -95,19 +95,20 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:background="@drawable/color_corner"
+                android:background="@drawable/msg_box"
                 android:ems="10"
                 android:hint="Enter Message Here"
                 android:inputType="textMultiLine"
+                android:maxHeight="100dp"
                 android:padding="10dp"
                 tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck,SpeakableTextPresentCheck" />
 
             <ImageButton
                 android:id="@+id/imageButton4"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_marginRight="5dp"
-                android:background="@drawable/color_corner"
+                android:background="@drawable/msg_box"
                 android:src="@android:drawable/ic_menu_send" />
 
         </LinearLayout>
