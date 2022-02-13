@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/NOOR BANO/StudioProjects/Online-Chat-Ap/app/src/main/res/drawable/color_corner.xml" value="0.223" />
+        <entry key="..\:/Users/NOOR BANO/StudioProjects/Online-Chat-Ap/app/src/main/res/drawable/color_corner2.xml" value="0.223" />
         <entry key="..\:/Users/NOOR BANO/StudioProjects/Online-Chat-Ap/app/src/main/res/layout/activity_chat_detail.xml" value="0.25052083333333336" />
         <entry key="..\:/Users/NOOR BANO/StudioProjects/Online-Chat-Ap/app/src/main/res/layout/activity_home.xml" value="0.25052083333333336" />
         <entry key="..\:/Users/NOOR BANO/StudioProjects/Online-Chat-Ap/app/src/main/res/layout/activity_login.xml" value="0.25052083333333336" />
