@@ -14,6 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.OnlineChatApp">
         <activity
+            android:name=".models.ChatDetailedActivity"
+            android:exported="false" />
+        <activity
             android:name=".OtherUserProfile"
             android:exported="false" />
         <activity
