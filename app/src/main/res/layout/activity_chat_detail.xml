@@ -68,8 +68,9 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
-            android:layout_height="614dp"
-            android:layout_margin="5dp" />
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -89,15 +90,15 @@
 
             <EditText
                 android:id="@+id/user_message"
-                android:layout_width="640dp"
-                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/color_corner"
                 android:ems="10"
-                android:gravity="start|top"
+                android:hint="Enter Message Here"
                 android:inputType="textMultiLine"
-                android:padding="6dp"
+                android:padding="10dp"
                 tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck,SpeakableTextPresentCheck" />
 
             <ImageButton
