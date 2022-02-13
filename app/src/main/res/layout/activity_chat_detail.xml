@@ -76,12 +76,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#15CFE6"
+            android:gravity="center"
             android:orientation="horizontal">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/attachment"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_margin="5dp"
                 android:padding="6dp"
                 android:src="@drawable/attachment"
@@ -103,8 +104,8 @@
 
             <ImageButton
                 android:id="@+id/imageButton4"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_marginRight="5dp"
                 android:background="@drawable/color_corner"
                 app:srcCompat="@android:drawable/ic_menu_send" />
