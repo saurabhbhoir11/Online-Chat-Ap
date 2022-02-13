@@ -11,13 +11,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class OtherUserProfile extends AppCompatActivity {
-
     ActivityOtherUserProfileBinding binding;
     FirebaseFirestore database;
     FirebaseUser firebaseuser;
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

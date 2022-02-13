@@ -17,41 +17,52 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:backgroundTint="#15CFE6"
+            android:layout_height="wrap_content"
+            android:background="@color/primary"
+            android:gravity="center"
             android:orientation="horizontal">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/d_p"
-                android:layout_width="61dp"
-                android:layout_height="match_parent"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_margin="5dp"
-                android:padding="8dp"
-                android:src=""
-                app:civ_border_color="#FF000000"
+                android:padding="2dp"
+                android:src="@drawable/user"
+                app:civ_border_color="#FFFFFF"
                 app:civ_border_width="2dp" />
 
             <TextView
                 android:id="@+id/f_username"
-                android:layout_width="581dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:padding="9dp"
                 android:text="TextView"
-                android:textSize="24sp" />
+                android:textColor="#FFFFFF"
+                android:textSize="20sp" />
 
-            <ImageButton
-                android:id="@+id/audio_call"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="5dp"
-                android:layout_weight="1"
-                android:backgroundTint="#79D311"
-                android:padding="8dp"
-                app:srcCompat="@android:drawable/stat_sys_phone_call"
-                tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck,TouchTargetSizeCheck,TouchTargetSizeCheck" />
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:padding="10dp"
+                android:tint="#FFFFFF"
+                app:srcCompat="@drawable/call" />
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:padding="10dp"
+                android:tint="#FFFFFF"
+                app:srcCompat="@drawable/videocall" />
 
         </LinearLayout>
 
@@ -62,7 +73,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="51dp"
+            android:layout_height="wrap_content"
             android:backgroundTint="#15CFE6"
             android:orientation="horizontal">
 
@@ -91,9 +102,10 @@
 
             <ImageButton
                 android:id="@+id/imageButton4"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/color_corner"
                 app:srcCompat="@android:drawable/ic_menu_send" />
 
         </LinearLayout>

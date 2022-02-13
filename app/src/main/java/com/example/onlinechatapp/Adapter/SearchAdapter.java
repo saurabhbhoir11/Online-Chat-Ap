@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.onlinechatapp.ChatDetailActivity;
 import com.example.onlinechatapp.OtherUserProfile;
 import com.example.onlinechatapp.R;
 import com.example.onlinechatapp.models.Users;
@@ -71,7 +72,11 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
        holder.msg_btn.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View view) {
-               Toast.makeText(context, "Hello", Toast.LENGTH_SHORT).show();
+               Intent intent = new Intent(context, ChatDetailActivity.class);
+               intent.putExtra("userId", users.getUserid());
+               intent.putExtra("profile", users.getProfilepic());
+               intent.putExtra("username", users.getUsername());
+               context.startActivity(intent);
            }
        });
     }

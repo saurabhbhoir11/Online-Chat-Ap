@@ -6,7 +6,6 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/linearLayout2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -57,7 +56,9 @@
                     android:layout_gravity="center"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
-                    android:text="Decline" />
+                    android:backgroundTint="#FFFFFF"
+                    android:text="Decline"
+                    android:textColor="@color/primary" />
 
                 <Button
                     android:id="@+id/button"
