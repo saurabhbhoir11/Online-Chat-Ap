@@ -6,6 +6,7 @@
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -64,31 +65,33 @@
     </LinearLayout>
 
     <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:orientation="vertical"
-            tools:ignore="MissingConstraints">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profile"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:padding="10dp"
-                android:src="@drawable/user"
-                app:civ_border_color="#FF000000"
-                app:civ_border_width="2dp" />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profile"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:padding="10dp"
+            android:src="@drawable/user"
+            app:civ_border_color="#FF000000"
+            app:civ_border_width="2dp" />
 
-            <ImageButton
-                android:id="@+id/edit"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginTop="-35dp"
-                android:layout_marginRight="10dp"
-                android:background="#00FFFFFF"
-                android:filterTouchesWhenObscured="true"
-                android:scaleType="fitXY"
-                android:src="@drawable/pencil" />
-        </LinearLayout>
+        <ImageButton
+            android:id="@+id/edit"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="-35dp"
+            android:layout_marginRight="10dp"
+            android:background="#00FFFFFF"
+            android:filterTouchesWhenObscured="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/pencil" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
