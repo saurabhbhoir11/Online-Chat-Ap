@@ -67,7 +67,7 @@ public class ChatDetailActivity extends AppCompatActivity {
         });
 
 
-        /*binding.send_btn.setOnClickListener(new View.OnClickListener() {
+        binding.send_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String msg = message.getText().toString();
@@ -105,6 +105,6 @@ public class ChatDetailActivity extends AppCompatActivity {
                     }
                 });
             }
-        });*/
+        });
     }
 }
