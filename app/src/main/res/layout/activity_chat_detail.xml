@@ -104,7 +104,7 @@
                 tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck,SpeakableTextPresentCheck" />
 
             <ImageButton
-                android:id="@+id/imageButton4"
+                android:id="@+id/send_btn"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_marginRight="5dp"

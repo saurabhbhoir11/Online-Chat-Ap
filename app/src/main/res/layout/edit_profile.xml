@@ -91,7 +91,7 @@
             android:background="#00FFFFFF"
             android:filterTouchesWhenObscured="true"
             android:scaleType="fitXY"
-            android:src="@drawable/pencil" />
+            android:src="@drawable/call" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

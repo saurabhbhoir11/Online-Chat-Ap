@@ -68,7 +68,7 @@ public class usernameactivity extends AppCompatActivity {
                                     firestore.collection("Users").document(auth.getCurrentUser().getUid()).update(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void unused) {
-                                            startActivity(new Intent(usernameactivity.this, home.class));
+                                            startActivity(new Intent(usernameactivity.this, Login.class));
                                             finish();
                                         }
                                     });
