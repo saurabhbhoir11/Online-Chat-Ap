@@ -83,48 +83,22 @@ public class ChatAdapter extends RecyclerView.Adapter {
 
     public class RecieverViewHolder extends RecyclerView.ViewHolder {
         TextView recieverMsg, recievertime;
-        ImageView photos, play2;
-        View reclayout;
-        Button loc;
-        CardView card_picR, card_thumbR;
+
 
         public RecieverViewHolder(@NonNull View itemView) {
             super(itemView);
-            /*recieverMsg = itemView.findViewById(R.id.RecieverText);
-            recievertime = itemView.findViewById(R.id.Reciever_Time);
-            photos = itemView.findViewById(R.id.photos);
-            reclayout = itemView.findViewById(R.id.reclayout);
-            play2 = itemView.findViewById(R.id.play2);
-            card_picR = itemView.findViewById(R.id.card_picR);
-            card_thumbR = itemView.findViewById(R.id.card_thumbR);*/
+            recieverMsg = itemView.findViewById(R.id.rec_msg);
+            recievertime = itemView.findViewById(R.id.rec_time);
         }
     }
 
     public class SenderViewHolder extends RecyclerView.ViewHolder {
-        TextView senderMsg, sendertime, displayname, phonenumber;
-        ImageView photo, icon, play, sel;
-        Button stop;
-        View constraint, senderlay, audio, location;
-        WebView gif;
-        CardView card_pic, card_thumb;
+        TextView senderMsg, sendertime;
 
         public SenderViewHolder(@NonNull View itemView) {
             super(itemView);
-            /*senderMsg = itemView.findViewById(R.id.Sender_Text);
-            sendertime = itemView.findViewById(R.id.Sender_Time);
-            photo = itemView.findViewById(R.id.photo);
-            displayname = itemView.findViewById(R.id.displayname);
-            phonenumber = itemView.findViewById(R.id.phonenum);
-            constraint = itemView.findViewById(R.id.contact);
-            icon = itemView.findViewById(R.id.contpic);
-            gif = itemView.findViewById(R.id.gif);
-            play = itemView.findViewById(R.id.play);
-            senderlay = itemView.findViewById(R.id.senderlayout);
-            audio = itemView.findViewById(R.id.audio);
-            stop = itemView.findViewById(R.id.stop);
-            sel = itemView.findViewById(R.id.sel);
-            card_pic = itemView.findViewById(R.id.card_pic);
-            card_thumb = itemView.findViewById(R.id.card_thumb);*/
+            senderMsg = itemView.findViewById(R.id.send_msg);
+            sendertime = itemView.findViewById(R.id.send_time);
         }
     }
 }

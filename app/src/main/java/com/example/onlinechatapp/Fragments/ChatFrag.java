@@ -2,6 +2,7 @@ package com.example.onlinechatapp.Fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -10,11 +11,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.onlinechatapp.Adapter.InboxAdapter;
+import com.example.onlinechatapp.Adapter.NotificationAdapter;
+import com.example.onlinechatapp.NotificationActivity;
 import com.example.onlinechatapp.R;
 import com.example.onlinechatapp.databinding.FragmentChatBinding;
 import com.example.onlinechatapp.models.Users;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
@@ -39,8 +46,26 @@ public class ChatFrag extends Fragment {
         binding.inboxlist.setAdapter(inboxAdapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         binding.inboxlist.setLayoutManager(layoutManager);
-
+        getUserDetails();
 
         return binding.getRoot();
     }
+
+    private void getUserDetails() {
+        firestore.collection("notifications").document(auth.getCurrentUser().getUid()).collection("userid").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                list.clear();
+                for (DocumentSnapshot snapshot : value.getDocuments()) {
+                    Users users = snapshot.toObject(Users.class);
+                    users.setUserid(snapshot.get("uid").toString());
+                    if (snapshot.get("status").equals("1")) {
+                        list.add(users);
+                    }
+                }
+                inboxAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
 }

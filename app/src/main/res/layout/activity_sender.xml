@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:id="@+id/textView10"
+            android:id="@+id/send_msg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="left"
@@ -29,7 +29,7 @@
             android:text="Sample Text Message" />
 
         <TextView
-            android:id="@+id/textView14"
+            android:id="@+id/send_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"

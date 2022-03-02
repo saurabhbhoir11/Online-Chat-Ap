@@ -6,7 +6,10 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.bumptech.glide.Glide;
+import com.example.onlinechatapp.Adapter.ChatAdapter;
 import com.example.onlinechatapp.databinding.ActivityChatDetailBinding;
 import com.example.onlinechatapp.models.Message_Model;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -28,6 +31,7 @@ public class ChatDetailActivity extends AppCompatActivity {
     ActivityChatDetailBinding binding;
     FirebaseFirestore firestore;
     FirebaseAuth auth;
+    ChatAdapter chatAdapter;
 
     String senderId;
     String receiverId;
@@ -51,21 +55,30 @@ public class ChatDetailActivity extends AppCompatActivity {
         username = getIntent().getStringExtra("username");
         profile_pic = getIntent().getStringExtra("profile");
 
+        binding.fUsername.setText(username);
+        Glide.with(this).load(profile_pic).override(100, 100).placeholder(R.drawable.user).into(binding.dP);
+
         SenderRoom = senderId + receiverId;
         ReceiverRoom = receiverId + senderId;
 
         final ArrayList<Message_Model> message_models = new ArrayList<>();
-        //setAdapter
+        /*chatAdapter = new ChatAdapter(message_models, this);
+        binding.chatlist.setAdapter(chatAdapter);
 
-       /* firestore.collection("chats").addSnapshotListener(new EventListener<QuerySnapshot>() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        binding.chatlist.setLayoutManager(layoutManager);*/
+
+
+        /*firestore.collection("chats").document(SenderRoom).collection(SenderRoom).addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 message_models.clear();
                 for (DocumentSnapshot snapshot : value.getDocuments()) {
                     Message_Model model = snapshot.toObject(Message_Model.class);
                     message_models.add(model);
-                    //smooth Scroll
+                    binding.chatlist.smoothScrollToPosition(binding.chatlist.getAdapter().getItemCount());
                 }
+                chatAdapter.notifyDataSetChanged();
             }
         });*/
 
@@ -104,7 +117,7 @@ public class ChatDetailActivity extends AppCompatActivity {
                         firestore.collection("chats").document(ReceiverRoom).collection(ReceiverRoom).add(message_model).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                             @Override
                             public void onSuccess(DocumentReference documentReference) {
-                                //notify adapter
+
                             }
                         });
                     }
