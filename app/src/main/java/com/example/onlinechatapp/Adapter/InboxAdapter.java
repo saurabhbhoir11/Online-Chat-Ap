@@ -54,9 +54,9 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.viewholder> 
         firestore.collection("Users").document(users.getUserid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                username =value.get("username").toString();
-                profilepic =value.get("profilepic").toString();
-                Glide.with(context).load(profilepic).override(96, 96).placeholder(R.drawable.user).into(holder.image);
+                username = String.valueOf(value.get("username"));
+                profilepic = String.valueOf(value.get("profilepic"));
+                Glide.with(context).load(value.get("profilepic")).override(96, 96).placeholder(R.drawable.user).into(holder.image);
                 holder.UserName.setText(username);
             }
         });

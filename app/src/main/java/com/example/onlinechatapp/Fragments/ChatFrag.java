@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.onlinechatapp.Adapter.InboxAdapter;
 import com.example.onlinechatapp.Adapter.NotificationAdapter;
@@ -52,16 +53,14 @@ public class ChatFrag extends Fragment {
     }
 
     private void getUserDetails() {
-        firestore.collection("notifications").document(auth.getCurrentUser().getUid()).collection("userid").addSnapshotListener(new EventListener<QuerySnapshot>() {
+        firestore.collection("friends").document(auth.getCurrentUser().getUid()).collection("userid").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 list.clear();
                 for (DocumentSnapshot snapshot : value.getDocuments()) {
                     Users users = snapshot.toObject(Users.class);
-                    users.setUserid(snapshot.get("uid").toString());
-                    if (snapshot.get("status").equals("1")) {
-                        list.add(users);
-                    }
+                    users.setUserid(String.valueOf(snapshot.get("uid")));
+                    list.add(users);
                 }
                 inboxAdapter.notifyDataSetChanged();
             }

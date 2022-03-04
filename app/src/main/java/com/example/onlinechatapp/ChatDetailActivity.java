@@ -44,8 +44,8 @@ public class ChatDetailActivity extends AppCompatActivity {
         binding = ActivityChatDetailBinding.inflate(getLayoutInflater());
         super.onCreate(savedInstanceState);
         setContentView(binding.getRoot());
-        firestore=FirebaseFirestore.getInstance();
-        auth=FirebaseAuth.getInstance();
+        firestore = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
 
         getSupportActionBar().hide();
 
@@ -62,14 +62,14 @@ public class ChatDetailActivity extends AppCompatActivity {
         ReceiverRoom = receiverId + senderId;
 
         final ArrayList<Message_Model> message_models = new ArrayList<>();
-        /*chatAdapter = new ChatAdapter(message_models, this);
+        chatAdapter = new ChatAdapter(message_models, ChatDetailActivity.this);
         binding.chatlist.setAdapter(chatAdapter);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        binding.chatlist.setLayoutManager(layoutManager);*/
+        LinearLayoutManager layoutManager = new LinearLayoutManager(ChatDetailActivity.this);
+        binding.chatlist.setLayoutManager(layoutManager);
 
 
-        /*firestore.collection("chats").document(SenderRoom).collection(SenderRoom).addSnapshotListener(new EventListener<QuerySnapshot>() {
+        firestore.collection("chats").document(SenderRoom).collection(SenderRoom).orderBy("time").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 message_models.clear();
@@ -80,7 +80,7 @@ public class ChatDetailActivity extends AppCompatActivity {
                 }
                 chatAdapter.notifyDataSetChanged();
             }
-        });*/
+        });
 
 
         binding.sendBtn.setOnClickListener(new View.OnClickListener() {
@@ -89,18 +89,18 @@ public class ChatDetailActivity extends AppCompatActivity {
                 String msg = binding.userMessage.getText().toString();
                 Message_Model message_model = new Message_Model(msg, senderId);
                 Calendar calendar = Calendar.getInstance();
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm");
+                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm aa");
                 String time = simpleDateFormat.format(calendar.getTime());
                 message_model.setTime(time);
 
                 binding.userMessage.setText("");
-                firestore.collection("chats").document(ReceiverRoom).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                firestore.collection("friends").document(auth.getCurrentUser().getUid()).collection("userid").document(receiverId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
                     public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                         if (!value.exists()) {
-                            HashMap<String,Object> hashMap =new HashMap<>();
-                            hashMap.put("uid",senderId);
-                            hashMap.put("status","0");
+                            HashMap<String, Object> hashMap = new HashMap<>();
+                            hashMap.put("uid", senderId);
+                            hashMap.put("status", "0");
 
                             firestore.collection("notifications").document(receiverId).collection("userid").document(senderId).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
@@ -111,13 +111,14 @@ public class ChatDetailActivity extends AppCompatActivity {
                         }
                     }
                 });
+
                 firestore.collection("chats").document(SenderRoom).collection(SenderRoom).add(message_model).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         firestore.collection("chats").document(ReceiverRoom).collection(ReceiverRoom).add(message_model).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                             @Override
                             public void onSuccess(DocumentReference documentReference) {
-
+                                chatAdapter.notifyDataSetChanged();
                             }
                         });
                     }

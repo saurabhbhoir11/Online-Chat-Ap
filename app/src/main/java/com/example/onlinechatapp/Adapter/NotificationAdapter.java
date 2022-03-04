@@ -18,6 +18,7 @@ import com.example.onlinechatapp.R;
 import com.example.onlinechatapp.models.Users;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -34,9 +35,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     FirebaseAuth auth;
     FirebaseFirestore firestore;
 
-    public NotificationAdapter(ArrayList<Users>list,Context context){
-        this.list=list;
-        this.context=context;
+    public NotificationAdapter(ArrayList<Users> list, Context context) {
+        this.list = list;
+        this.context = context;
     }
 
 
@@ -49,30 +50,56 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     @Override
     public void onBindViewHolder(@NonNull NotificationAdapter.viewholder holder, int position) {
-        firestore=FirebaseFirestore.getInstance();
-        auth=FirebaseAuth.getInstance();
-        Users users= list.get(position);
-        HashMap<String,Object> hashMap=new HashMap<>();
-        hashMap.put("uid",users.getUserid());
+        firestore = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
+        Users users = list.get(position);
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("uid", users.getUserid());
+
+
+        firestore.collection("Users").document(users.getUserid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                String username= String.valueOf(value.get("username"));
+                holder.username.setText(username);
+                Glide.with(context).load(value.get("profilepic")).placeholder(R.drawable.user).into(holder.profile);
+            }
+        });
 
         holder.accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                hashMap.put("status","1");
+                hashMap.put("status", "1");
                 firestore.collection("notifications").document(auth.getCurrentUser().getUid())
                         .collection("userid").document(users.getUserid()).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
                         Toast.makeText(context, "Request Accepted", Toast.LENGTH_SHORT).show();
+                        HashMap<String, Object> hashMap1 = new HashMap<>();
+                        hashMap1.put("uid", auth.getCurrentUser().getUid());
+                        firestore.collection("friends").document(users.getUserid()).collection("userid").document(auth.getCurrentUser().getUid()).set(hashMap1).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                HashMap<String, Object> hashMap2 = new HashMap<>();
+                                hashMap2.put("uid", users.getUserid());
+                                firestore.collection("friends").document(auth.getCurrentUser().getUid()).collection("userid").document(users.getUserid()).set(hashMap2).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+
+                                    }
+                                });
+                            }
+                        });
                     }
                 });
             }
         });
 
+
         holder.decline.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                hashMap.put("status","-1");
+                hashMap.put("status", "-1");
                 firestore.collection("notifications").document(auth.getCurrentUser().getUid())
                         .collection("userid").document(users.getUserid()).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -80,13 +107,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         Toast.makeText(context, "Request Declined", Toast.LENGTH_SHORT).show();
                     }
                 });
-            }
-        });
-        firestore.collection("Users").document(users.getUserid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                holder.username.setText(value.get("username").toString());
-                Glide.with(context).load(value.get("profilepic").toString()).into(holder.profile);
             }
         });
     }
@@ -97,15 +117,16 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     }
 
     public class viewholder extends RecyclerView.ViewHolder {
-        Button accept,decline;
+        Button accept, decline;
         TextView username;
         ImageView profile;
+
         public viewholder(@NonNull View itemView) {
             super(itemView);
-            accept=itemView.findViewById(R.id.acpt_btn);
-            decline=itemView.findViewById(R.id.dec_btn);
-            username=itemView.findViewById(R.id.username2);
-            profile=itemView.findViewById(R.id.prof_img);
+            accept = itemView.findViewById(R.id.acpt_btn);
+            decline = itemView.findViewById(R.id.dec_btn);
+            username = itemView.findViewById(R.id.username2);
+            profile = itemView.findViewById(R.id.prof_img);
         }
     }
 }

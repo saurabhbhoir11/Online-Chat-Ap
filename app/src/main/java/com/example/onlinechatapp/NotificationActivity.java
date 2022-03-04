@@ -24,9 +24,7 @@ import java.util.List;
 public class NotificationActivity extends AppCompatActivity {
     FirebaseFirestore firestore;
     FirebaseAuth auth;
-    ArrayList<Users> list;
     ActivityNotificationBinding binding;
-    NotificationAdapter notificationAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

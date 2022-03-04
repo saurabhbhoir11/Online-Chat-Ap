@@ -3,17 +3,18 @@ package com.example.onlinechatapp.models;
 public class Message_Model {
     String msg,userid,time;
 
-    public Message_Model(String msg,String userid){
-        this.msg=msg;
-        this.userid=userid;
-        this.time=time;
-    }
-
     public Message_Model(String msg,String userid,String time){
         this.msg=msg;
         this.userid=userid;
         this.time=time;
     }
+
+    public Message_Model(String msg,String userid){
+        this.msg=msg;
+        this.userid=userid;
+    }
+
+    public Message_Model(){}
 
     public String getMsg() {
         return msg;
@@ -28,7 +29,7 @@ public class Message_Model {
     }
 
     public void setuserid(String userid) {
-        userid = userid;
+        this.userid = userid;
     }
 
     public String getTime() {

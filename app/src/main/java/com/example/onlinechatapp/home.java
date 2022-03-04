@@ -15,17 +15,28 @@ import android.widget.Toast;
 
 import com.example.onlinechatapp.Adapter.FragmentsAdapter;
 import com.example.onlinechatapp.databinding.ActivityHomeBinding;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class home extends AppCompatActivity {
     ActivityHomeBinding binding;
+    FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         super.onCreate(savedInstanceState);
+        auth=FirebaseAuth.getInstance();
         setContentView(binding.getRoot());
         getSupportActionBar().setElevation(0);
 
+        binding.floatingActionButton3.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                auth.signOut();
+                startActivity(new Intent(home.this,Login.class));
+                return false;
+            }
+        });
 
         binding.viewpager.setAdapter(new FragmentsAdapter(getSupportFragmentManager()));
         binding.tabLayout.setupWithViewPager(binding.viewpager);
