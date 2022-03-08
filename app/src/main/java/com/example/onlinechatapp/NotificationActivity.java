@@ -41,6 +41,7 @@ public class NotificationActivity extends AppCompatActivity {
         firestore.collection("notifications").document(auth.getCurrentUser().getUid()).collection("userid").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                list.clear();
                 for (DocumentSnapshot snapshot : value.getDocuments()) {
                     Users users = snapshot.toObject(Users.class);
                     users.setUserid(snapshot.get("uid").toString());

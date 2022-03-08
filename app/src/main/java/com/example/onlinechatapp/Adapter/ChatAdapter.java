@@ -44,7 +44,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
     }
 
     public int getItemViewType(int position) {
-        if (messageModels.get(position).getuserid().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+        if (messageModels.get(position).getUserid().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
             return sender_View_Type;
         } else {
             return receiver_View_Type;

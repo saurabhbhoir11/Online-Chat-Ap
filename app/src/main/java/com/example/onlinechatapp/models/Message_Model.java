@@ -1,12 +1,13 @@
 package com.example.onlinechatapp.models;
 
 public class Message_Model {
-    String msg,userid,time;
+    String msg,userid,time,timestamp;
 
-    public Message_Model(String msg,String userid,String time){
+    public Message_Model(String msg,String userid,String time,String timestamp){
         this.msg=msg;
         this.userid=userid;
         this.time=time;
+        this.timestamp=timestamp;
     }
 
     public Message_Model(String msg,String userid){
@@ -24,20 +25,28 @@ public class Message_Model {
         this.msg = msg;
     }
 
-    public String getuserid() {
-        return userid;
-    }
-
-    public void setuserid(String userid) {
-        this.userid = userid;
-    }
-
     public String getTime() {
         return time;
     }
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public String getUserid() {
+        return userid;
+    }
+
+    public void setUserid(String userid) {
+        this.userid = userid;
+    }
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
 }
 

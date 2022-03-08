@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -12,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.example.onlinechatapp.Adapter.ChatAdapter;
 import com.example.onlinechatapp.databinding.ActivityChatDetailBinding;
 import com.example.onlinechatapp.models.Message_Model;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
@@ -69,7 +71,7 @@ public class ChatDetailActivity extends AppCompatActivity {
         binding.chatlist.setLayoutManager(layoutManager);
 
 
-        firestore.collection("chats").document(SenderRoom).collection(SenderRoom).orderBy("time").addSnapshotListener(new EventListener<QuerySnapshot>() {
+        firestore.collection("chats").document(SenderRoom).collection(SenderRoom).orderBy("timestamp").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 message_models.clear();
@@ -86,11 +88,13 @@ public class ChatDetailActivity extends AppCompatActivity {
         binding.sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String msg = binding.userMessage.getText().toString();
+                String msg = String.valueOf(binding.userMessage.getText());
                 Message_Model message_model = new Message_Model(msg, senderId);
                 Calendar calendar = Calendar.getInstance();
                 SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm aa");
                 String time = simpleDateFormat.format(calendar.getTime());
+                String timestamp = String.valueOf(System.currentTimeMillis());
+                message_model.setTimestamp(timestamp);
                 message_model.setTime(time);
 
                 binding.userMessage.setText("");

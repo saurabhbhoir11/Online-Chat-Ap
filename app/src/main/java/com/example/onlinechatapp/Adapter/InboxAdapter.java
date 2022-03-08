@@ -31,7 +31,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.viewholder> 
     ArrayList<Users> list;
     Context context;
     FirebaseFirestore firestore;
-    String username,profilepic;
+    String profilepic;
 
     public InboxAdapter(ArrayList<Users> list,Context context) {
       this.list=list;
@@ -54,33 +54,32 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.viewholder> 
         firestore.collection("Users").document(users.getUserid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                username = String.valueOf(value.get("username"));
                 profilepic = String.valueOf(value.get("profilepic"));
                 Glide.with(context).load(value.get("profilepic")).override(96, 96).placeholder(R.drawable.user).into(holder.image);
-                holder.UserName.setText(username);
-            }
-        });
+                holder.UserName.setText(String.valueOf(value.get("username")));
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, ChatDetailActivity.class);
-                intent.putExtra("userId", users.getUserid());
-                intent.putExtra("profile", profilepic);
-                intent.putExtra("username", username);
-                intent.putExtra("tagline", users.getTagline());
-                context.startActivity(intent);
-            }
-        });
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context, ChatDetailActivity.class);
+                        intent.putExtra("userId", users.getUserid());
+                        intent.putExtra("profile", String.valueOf(value.get("profilepic")));
+                        intent.putExtra("username", String.valueOf(value.get("username")));
+                        intent.putExtra("tagline", users.getTagline());
+                        context.startActivity(intent);
+                    }
+                });
 
-        holder.image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, OtherUserProfile.class);
-                intent.putExtra("userId", users.getUserid());
-                intent.putExtra("profile", profilepic);
-                intent.putExtra("username", username);
-                context.startActivity(intent);
+                holder.image.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(context, OtherUserProfile.class);
+                        intent.putExtra("userId", users.getUserid());
+                        intent.putExtra("profile", String.valueOf(value.get("profilepic")));
+                        intent.putExtra("username", String.valueOf(value.get("username")));
+                        context.startActivity(intent);
+                    }
+                });
             }
         });
     }

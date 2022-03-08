@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.onlinechatapp.EditProfileActivity;
 import com.example.onlinechatapp.R;
 import com.example.onlinechatapp.databinding.FragmentProfileBinding;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -54,6 +55,14 @@ public class ProfileFrag extends Fragment {
                 Glide.with(getContext()).load(value.get("profilepic")).centerCrop().placeholder(R.drawable.user).into(binding.profileImage);
                 binding.profileName.setText(""+value.get("username"));
 
+                binding.editProf.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent=new Intent(getContext(), EditProfileActivity.class);
+                        intent.putExtra("username",String.valueOf(value.get("username")));
+                        startActivity(intent);
+                    }
+                });
             }
         });
 
