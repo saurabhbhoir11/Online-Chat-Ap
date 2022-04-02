@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.example.onlinechatapp.Adapter.InboxAdapter;
 import com.example.onlinechatapp.Adapter.NotificationAdapter;
 import com.example.onlinechatapp.NotificationActivity;
+import com.example.onlinechatapp.Notifications.Token;
 import com.example.onlinechatapp.R;
 import com.example.onlinechatapp.databinding.FragmentChatBinding;
 import com.example.onlinechatapp.models.Users;
@@ -23,6 +24,7 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
 
@@ -49,7 +51,14 @@ public class ChatFrag extends Fragment {
         binding.inboxlist.setLayoutManager(layoutManager);
         getUserDetails();
 
+        updateToken(FirebaseInstanceId.getInstance().getToken());
+
         return binding.getRoot();
+    }
+
+    private void updateToken(String token){
+        Token token1=new Token(token);
+        firestore.collection("Tokens").document(auth.getCurrentUser().getUid()).set(token1);
     }
 
     private void getUserDetails() {
