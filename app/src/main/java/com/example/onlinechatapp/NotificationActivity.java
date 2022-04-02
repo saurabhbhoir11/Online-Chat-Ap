@@ -28,9 +28,8 @@ public class NotificationActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         binding = ActivityNotificationBinding.inflate(getLayoutInflater());
-
+        super.onCreate(savedInstanceState);
         setContentView(binding.getRoot());
 
         firestore = FirebaseFirestore.getInstance();
