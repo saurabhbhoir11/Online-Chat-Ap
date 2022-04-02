@@ -101,7 +101,7 @@ public class ChatDetailActivity extends AppCompatActivity {
                 firestore.collection("friends").document(auth.getCurrentUser().getUid()).collection("userid").document(receiverId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
                     public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                        if (!value.exists()) {
+                        if (!value.xists()) {
                             HashMap<String, Object> hashMap = new HashMap<>();
                             hashMap.put("uid", senderId);
                             hashMap.put("status", "0");
