@@ -9,16 +9,23 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.example.onlinechatapp.CreateGroup;
 import com.example.onlinechatapp.R;
 import com.example.onlinechatapp.databinding.FragmentGroupBinding;
+import com.example.onlinechatapp.models.GroupModel;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
 public class GroupFrag extends Fragment {
     FragmentGroupBinding binding;
     FirebaseAuth auth;
+
     private ArrayList<GroupModel> GroupList;
     private GroupAdapter groupAdapter;
 
@@ -36,7 +43,7 @@ public class GroupFrag extends Fragment {
         binding.floatingActionButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent= new Intent(getActivity(),creategrp.class);
+                Intent intent= new Intent(getActivity(), CreateGroup.class);
                 startActivity(intent);
             }
         });
@@ -47,8 +54,8 @@ public class GroupFrag extends Fragment {
 
     private void loadGroups(){
         GroupList =new ArrayList<>();
-        DatabaseReference ref= FirebaseDatabase.getInstance().getReference("groups");
-        ref.addValueEventListener(new ValueEventListener() {
+        CollectionReference ref= FirebaseFirestore.getInstance().collection("groups");
+        ref.add(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot){
                 GroupList.clear();

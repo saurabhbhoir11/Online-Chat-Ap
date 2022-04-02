@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -16,10 +17,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import com.example.onlinechatapp.databinding.ActivityCreateGroupBinding;
 import com.example.onlinechatapp.models.GroupModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -36,22 +39,25 @@ import java.util.HashMap;
 
 public class CreateGroup extends AppCompatActivity {
 
+    private Object String;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        ActivityCreategrpBinding binding;
+        ActivityCreateGroupBinding binding;
         ActionBar actionBar;
         FirebaseAuth auth;
-        private Uri imageuri=null;
+        Uri imageuri=null;
         FirebaseFirestore database;
-        private String[] storagepermissions;
+        String[] storagepermissions;
         ProgressDialog pd;
         int temp=0;
         String type="private";
 
         @Override
-        protected void onCreate(Bundle savedInstanceState) {
+        protected void onCreate(Bundle savedInstanceState)
+        {
             super.onCreate(savedInstanceState);
-            binding=ActivityCreategrpBinding.inflate(getLayoutInflater());
+            binding=ActivityCreateGroupBinding.inflate(getLayoutInflater());
             setContentView(binding.getRoot());
             actionBar=getSupportActionBar();
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -66,7 +72,7 @@ public class CreateGroup extends AppCompatActivity {
             binding.floatingActionButton2.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    CreateGroup();
+                    new CreateGroup();
                 }
             });
             binding.switch1.setOnClickListener(new View.OnClickListener() {
@@ -92,6 +98,7 @@ public class CreateGroup extends AppCompatActivity {
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 }
 
+                @RequiresApi(api = Build.VERSION_CODES.M)
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
                     int num = binding.description.getText().toString().length();
@@ -205,8 +212,8 @@ public class CreateGroup extends AppCompatActivity {
                             .setValue(hashMap1).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            Toast.makeText(creategrp.this, grpTitle+" ChatRoom Created", Toast.LENGTH_SHORT).show();
-                            Intent intent = new Intent(creategrp.this, MainActivity.class);
+                            Toast.makeText(CreateGroup.this, grpTitle+" ChatRoom Created", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(CreateGroup.this, MainActivity.class);
                             startActivity(intent);
                         }
                     }).addOnFailureListener(new OnFailureListener() {
@@ -220,7 +227,7 @@ public class CreateGroup extends AppCompatActivity {
 
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(creategrp.this, "Failed To Create ChatRoom", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CreateGroup.this, "Failed To Create ChatRoom", Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -230,12 +237,7 @@ public class CreateGroup extends AppCompatActivity {
             ActivityCompat.requestPermissions(this,storagepermissions,100);
         }
 
-        private void checkUser() {
-            FirebaseUser firebaseUser= auth.getCurrentUser();
-            if(firebaseUser!=null){
-                actionBar.setSubtitle(firebaseUser.getDisplayName());
-            }
-        }
+
         @Override
         public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
             if(grantResults.length>0){
@@ -262,6 +264,13 @@ public class CreateGroup extends AppCompatActivity {
                 }
             }
             super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    private void checkUser() {
+        FirebaseUser firebaseUser= auth.getCurrentUser();
+        if(firebaseUser!=null){
+            actionBar.setSubtitle(firebaseUser.getDisplayName());
         }
     }
 }
