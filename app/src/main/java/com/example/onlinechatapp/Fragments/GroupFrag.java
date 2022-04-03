@@ -11,8 +11,8 @@ import androidx.fragment.app.Fragment;
 
 import com.example.onlinechatapp.R;
 import com.example.onlinechatapp.databinding.FragmentGroupBinding;
+import com.example.onlinechatapp.models.GroupModel;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 
@@ -20,7 +20,7 @@ public class GroupFrag extends Fragment {
     FragmentGroupBinding binding;
     FirebaseAuth auth;
     private ArrayList<GroupModel> GroupList;
-    private GroupAdapter groupAdapter;
+    //private GroupAdapter groupAdapter;
 
     public GroupFrag() {
         // Required empty public constructor
@@ -30,23 +30,23 @@ public class GroupFrag extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_group, container, false);
+        binding=FragmentGroupBinding.inflate(inflater,container,false);
         auth= FirebaseAuth.getInstance();
 
-        binding.floatingActionButton.setOnClickListener(new View.OnClickListener(){
+        /*binding.floatingActionButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 Intent intent= new Intent(getActivity(),creategrp.class);
                 startActivity(intent);
             }
         });
-        loadGroups();
+        loadGroups();*/
 
         return binding.getRoot();
     }
 
     private void loadGroups(){
-        GroupList =new ArrayList<>();
+        /*GroupList =new ArrayList<>();
         DatabaseReference ref= FirebaseDatabase.getInstance().getReference("groups");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -66,6 +66,6 @@ public class GroupFrag extends Fragment {
             public void onCancelled(@NonNull DatabaseError error){
 
             }
-        });
+        });*/
     }
 }

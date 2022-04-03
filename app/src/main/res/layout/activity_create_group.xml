@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
-    tools:context=".creategrp">
+    tools:context=".CreateGroup">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -46,7 +46,6 @@
                     android:layout_gravity="bottom"
                     android:layout_marginLeft="-35dp"
                     android:layout_marginBottom="10dp"
-                    android:background="@drawable/edit"
                     app:layout_constraintBottom_toBottomOf="@+id/profile2"
                     app:layout_constraintEnd_toEndOf="@+id/profile2"
                     app:layout_constraintHorizontal_bias="0.866"
@@ -180,8 +179,8 @@
         android:layout_gravity="bottom|right"
         android:layout_marginTop="-80dp"
         android:clickable="true"
-        app:backgroundTint="@color/cyan"
-        app:srcCompat="@drawable/add_users"
+        app:backgroundTint="@color/primary"
+        app:srcCompat="@drawable/user"
         app:tint="@android:color/white" />
 
 </LinearLayout>

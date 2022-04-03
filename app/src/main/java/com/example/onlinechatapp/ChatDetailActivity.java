@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.example.onlinechatapp.Adapter.ChatAdapter;
+import com.example.onlinechatapp.Notifications.MyFirebaseMessagingService;
 import com.example.onlinechatapp.databinding.ActivityChatDetailBinding;
 import com.example.onlinechatapp.models.Message_Model;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -98,6 +99,14 @@ public class ChatDetailActivity extends AppCompatActivity {
                 String timestamp = String.valueOf(System.currentTimeMillis());
                 message_model.setTimestamp(timestamp);
                 message_model.setTime(time);
+
+                FirebaseFirestore.getInstance().collection("Users").document(receiverId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                        String token= String.valueOf(value.get("token"));
+                        MyFirebaseMessagingService.senPushNotification(msg,"username",token);
+                    }
+                });
 
                 binding.userMessage.setText("");
 

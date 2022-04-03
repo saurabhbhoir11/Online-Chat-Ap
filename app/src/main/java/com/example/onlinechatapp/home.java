@@ -1,5 +1,7 @@
 package com.example.onlinechatapp;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,6 +9,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,8 +17,16 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.onlinechatapp.Adapter.FragmentsAdapter;
+import com.example.onlinechatapp.Notifications.SharedPrefManager;
 import com.example.onlinechatapp.databinding.ActivityHomeBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.util.HashMap;
 
 public class home extends AppCompatActivity {
     ActivityHomeBinding binding;
@@ -28,6 +39,32 @@ public class home extends AppCompatActivity {
         auth=FirebaseAuth.getInstance();
         setContentView(binding.getRoot());
         getSupportActionBar().setElevation(0);
+
+        //Toast.makeText(this,"hello"+ SharedPrefManager.getInstance(this).getToken(), Toast.LENGTH_SHORT).show();
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+                        Toast.makeText(home.this, "hello", Toast.LENGTH_SHORT).show();
+                        // Get new FCM registration token
+                        String token = task.getResult();
+                        HashMap<String,Object> hashMap=new HashMap<>();
+                        hashMap.put("token",token);
+                        FirebaseFirestore.getInstance().collection("Users").document(auth.getCurrentUser().getUid()).update(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                String msg = token;
+                                Log.d(TAG, msg);
+                                Toast.makeText(home.this, msg, Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                });
+
 
         binding.floatingActionButton3.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
