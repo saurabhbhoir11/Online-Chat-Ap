@@ -67,11 +67,12 @@ public class ChatAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Message_Model messageModel = messageModels.get(position);
         if (holder.getClass() == SenderViewHolder.class) {
-            if (messageModel.getMsg().equals("*Photo*")) {
+            if (messageModel.getMsg().equals("$2y$10$39cSefzbHNYvvwTmQpmN2OTZ7jfX.vWd7QeSqgs9pRRWKU7zF7txm")) {
                 Glide.with(context).load(messageModel.getImageUrl()).into(((SenderViewHolder) holder).image1);
                 ((SenderViewHolder) holder).img_layout.setVisibility(View.VISIBLE);
                 ((SenderViewHolder) holder).image1.setVisibility(View.VISIBLE);
                 ((SenderViewHolder) holder).senderMsg.setVisibility(View.GONE);
+                ((SenderViewHolder) holder).sendertime.setText(messageModel.getTime());
 
                 /*((SenderViewHolder) holder).image1.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -82,15 +83,29 @@ public class ChatAdapter extends RecyclerView.Adapter {
                     }
                 });*/
             }
+            else if(messageModel.getMsg().equals("$2y$10$4S0nmurvLkIkLbjnUZMrOu/IWViv87UzRB2v5hcBVzbGDUkw.3D..")){
+
+            }
             else {
                 ((SenderViewHolder) holder).img_layout.setVisibility(View.GONE);
+                ((SenderViewHolder) holder).senderMsg.setVisibility(View.VISIBLE);
                 ((SenderViewHolder) holder).sendertime.setText(messageModel.getTime());
                 ((SenderViewHolder) holder).senderMsg.setText(messageModel.getMsg());
             }
 
         } else {
-            ((RecieverViewHolder) holder).recievertime.setText(messageModel.getTime());
-            ((RecieverViewHolder) holder).recieverMsg.setText(messageModel.getMsg());
+            if (messageModel.getMsg().equals("$2y$10$39cSefzbHNYvvwTmQpmN2OTZ7jfX.vWd7QeSqgs9pRRWKU7zF7txm")) {
+                Glide.with(context).load(messageModel.getImageUrl()).into(((RecieverViewHolder) holder).image2);
+                ((RecieverViewHolder) holder).img_layout2.setVisibility(View.VISIBLE);
+                ((RecieverViewHolder) holder).image2.setVisibility(View.VISIBLE);
+                ((RecieverViewHolder) holder).recieverMsg.setVisibility(View.GONE);
+                ((RecieverViewHolder) holder).recievertime.setText(messageModel.getTime());
+            }
+            else {
+                ((RecieverViewHolder) holder).recieverMsg.setVisibility(View.VISIBLE);
+                ((RecieverViewHolder) holder).recievertime.setText(messageModel.getTime());
+                ((RecieverViewHolder) holder).recieverMsg.setText(messageModel.getMsg());
+            }
         }
     }
 
@@ -101,12 +116,16 @@ public class ChatAdapter extends RecyclerView.Adapter {
 
     public class RecieverViewHolder extends RecyclerView.ViewHolder {
         TextView recieverMsg, recievertime;
+        CardView img_layout2;
+        ImageView image2;
 
 
         public RecieverViewHolder(@NonNull View itemView) {
             super(itemView);
             recieverMsg = itemView.findViewById(R.id.rec_msg);
             recievertime = itemView.findViewById(R.id.rec_time);
+            img_layout2= itemView.findViewById(R.id.image_card2);
+            image2 = itemView.findViewById(R.id.image2);
         }
     }
 
