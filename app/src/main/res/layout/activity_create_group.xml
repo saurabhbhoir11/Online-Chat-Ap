@@ -46,13 +46,15 @@
                     android:layout_gravity="bottom"
                     android:layout_marginLeft="-35dp"
                     android:layout_marginBottom="10dp"
+                    android:contentDescription="TODO"
+                    android:rotation="270"
+                    android:src="@android:drawable/ic_menu_edit"
                     app:layout_constraintBottom_toBottomOf="@+id/profile2"
                     app:layout_constraintEnd_toEndOf="@+id/profile2"
                     app:layout_constraintHorizontal_bias="0.866"
                     app:layout_constraintStart_toStartOf="@+id/profile2"
                     app:layout_constraintTop_toTopOf="@+id/profile2"
-                    app:layout_constraintVertical_bias="0.9"
-                    android:contentDescription="TODO" />
+                    app:layout_constraintVertical_bias="0.9" />
             </LinearLayout>
 
             <LinearLayout
@@ -65,14 +67,13 @@
                     android:id="@+id/roomtitle"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
-                    android:background="@drawable/color_corner"
-                    android:backgroundTint="#E3E3E3"
+                    android:background="@drawable/button_back"
+                    android:backgroundTint="#f2f2f2"
                     android:ems="10"
                     android:hint="Room Title"
                     android:inputType="textPersonName"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:textColor="#00ACC1"
                     app:layout_constraintBottom_toTopOf="@+id/description"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -89,8 +90,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
                     android:layout_marginTop="24dp"
-                    android:background="@drawable/color_corner"
-                    android:backgroundTint="#E3E3E3"
+                    android:background="@drawable/button_back"
+                    android:backgroundTint="#f2f2f2"
                     android:ems="10"
                     android:gravity="top"
                     android:hint="Room Description"
@@ -98,7 +99,6 @@
                     android:paddingLeft="10dp"
                     android:paddingTop="10dp"
                     android:paddingRight="10dp"
-                    android:textColor="#00ACC1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/roomtitle" />
@@ -132,12 +132,16 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/color_corner"
-                android:backgroundTint="#E3E3E3"
+                android:backgroundTint="#f2f2f2"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingLeft="25dp"
+                android:paddingRight="25dp">
 
                 <TextView
                     android:id="@+id/grp_private"
@@ -146,7 +150,7 @@
                     android:layout_weight="1"
                     android:gravity="right"
                     android:text="PRIAVTE"
-                    android:textColor="#00ACC1"
+                    android:textColor="@color/primary"
                     android:textStyle="bold" />
 
                 <Switch
@@ -154,10 +158,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="50dp"
                     android:layout_gravity="center"
-                    android:backgroundTint="#00ACC1"
+                    android:backgroundTint="@color/primary"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:thumbTint="#00ACC1"
+                    android:thumbTint="@color/primary"
                     android:trackTint="#00ACC1" />
 
                 <TextView
@@ -180,7 +184,7 @@
         android:layout_marginTop="-80dp"
         android:clickable="true"
         app:backgroundTint="@color/primary"
-        app:srcCompat="@drawable/user"
+        app:srcCompat="@android:drawable/ic_media_next"
         app:tint="@android:color/white" />
 
 </LinearLayout>

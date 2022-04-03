@@ -66,7 +66,7 @@ public class CreateGroup extends AppCompatActivity {
         binding.floatingActionButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new CreateGroup();
+                CreateGroup();
             }
         });
         binding.switch1.setOnClickListener(new View.OnClickListener() {
