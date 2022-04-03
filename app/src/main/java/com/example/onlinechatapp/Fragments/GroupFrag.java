@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.example.onlinechatapp.CreateGroup;
 import com.example.onlinechatapp.R;
 import com.example.onlinechatapp.databinding.FragmentGroupBinding;
 import com.example.onlinechatapp.models.GroupModel;
@@ -33,21 +34,22 @@ public class GroupFrag extends Fragment {
         binding=FragmentGroupBinding.inflate(inflater,container,false);
         auth= FirebaseAuth.getInstance();
 
-        /*binding.floatingActionButton.setOnClickListener(new View.OnClickListener(){
+
+        binding.crtgrpBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent= new Intent(getActivity(),creategrp.class);
+                Intent intent= new Intent(getActivity(), CreateGroup.class);
                 startActivity(intent);
             }
         });
-        loadGroups();*/
+        loadGroups();
 
         return binding.getRoot();
     }
 
     private void loadGroups(){
-        /*GroupList =new ArrayList<>();
-        DatabaseReference ref= FirebaseDatabase.getInstance().getReference("groups");
+        GroupList =new ArrayList<>();
+        /*DatabaseReference ref= FirebaseDatabase.getInstance().getReference("groups");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot){
