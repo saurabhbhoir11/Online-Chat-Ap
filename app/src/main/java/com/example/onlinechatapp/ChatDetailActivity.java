@@ -1,9 +1,12 @@
 package com.example.onlinechatapp;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,7 +16,9 @@ import com.example.onlinechatapp.Adapter.ChatAdapter;
 import com.example.onlinechatapp.Notifications.MyFirebaseMessagingService;
 import com.example.onlinechatapp.databinding.ActivityChatDetailBinding;
 import com.example.onlinechatapp.models.Message_Model;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -21,6 +26,8 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -142,5 +149,66 @@ public class ChatDetailActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+   /* @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 20){
+            if(data!= null){
+                if(data.getData() != null){
+                    Uri selectimage = data.getData();
+                    Calendar calendar = Calendar.getInstance();
+                    StorageReference ref = firebaseStorage.getReference().child("chats").child(calendar.getTimeInMillis() + "");
+                    ref.putFile(selectimage).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                            if (task.isSuccessful()){
+                                ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        String filepath = uri.toString();
+                                        String msg = binding.sendmsg1.getText().toString();
+                                        final MessageModel model = new MessageModel(senderId, msg);
+                                        Calendar ctime = Calendar.getInstance();
+                                        SimpleDateFormat currenttime = new SimpleDateFormat("hh:mm");
+                                        final String savetime = currenttime.format(ctime.getTime());
+                                        model.setMsg("*Photo*");
+                                        model.setTime(savetime);
+                                        model.setImageUrl(filepath);
+                                        binding.sendmsg1.setText("");
+
+                                        database.getReference().child("chats").child(SenderRoom).push().setValue(model)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>(){
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        database.getReference().child("chats").child(RecieverRoom).push().setValue(model)
+                                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                    @Override
+                                                                    public void onSuccess(Void avoid){
+                                                                        database.getReference().child("chats").child("time").push().serVaue(model)
+                                                                                .addOnSuccessListener(new OnSuccessListener<Void>(){
+                                                                                    @Override
+                                                                                    public void onSuccess(Void aVoid) {
+                                                                                        adapter.notifyDataSetChanged();
+                                                                                    }
+                                                                                });
+
+                                                                    }
+
+                                                                });
+                                                    }
+                                                });
+
+
+
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+            }
+        }*/
     }
 }
