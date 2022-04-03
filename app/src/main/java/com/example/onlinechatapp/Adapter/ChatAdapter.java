@@ -67,8 +67,26 @@ public class ChatAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Message_Model messageModel = messageModels.get(position);
         if (holder.getClass() == SenderViewHolder.class) {
-            ((SenderViewHolder) holder).sendertime.setText(messageModel.getTime());
-            ((SenderViewHolder) holder).senderMsg.setText(messageModel.getMsg());
+            if (messageModel.getMsg().equals("*Photo*")) {
+                Glide.with(context).load(messageModel.getImageUrl()).into(((SenderViewHolder) holder).image1);
+                ((SenderViewHolder) holder).img_layout.setVisibility(View.VISIBLE);
+                ((SenderViewHolder) holder).image1.setVisibility(View.VISIBLE);
+                ((SenderViewHolder) holder).senderMsg.setVisibility(View.GONE);
+
+                /*((SenderViewHolder) holder).image1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context, PhotoView.class);
+                        intent.putExtra("image", messageModel.getImageUrl());
+                        context.startActivity(intent);
+                    }
+                });*/
+            }
+            else {
+                ((SenderViewHolder) holder).img_layout.setVisibility(View.GONE);
+                ((SenderViewHolder) holder).sendertime.setText(messageModel.getTime());
+                ((SenderViewHolder) holder).senderMsg.setText(messageModel.getMsg());
+            }
 
         } else {
             ((RecieverViewHolder) holder).recievertime.setText(messageModel.getTime());
@@ -94,11 +112,15 @@ public class ChatAdapter extends RecyclerView.Adapter {
 
     public class SenderViewHolder extends RecyclerView.ViewHolder {
         TextView senderMsg, sendertime;
+        CardView img_layout;
+        ImageView image1;
 
         public SenderViewHolder(@NonNull View itemView) {
             super(itemView);
             senderMsg = itemView.findViewById(R.id.send_msg);
             sendertime = itemView.findViewById(R.id.send_time);
+            img_layout= itemView.findViewById(R.id.image_card);
+            image1 = itemView.findViewById(R.id.image);
         }
     }
 }
