@@ -144,27 +144,3 @@ public class ChatDetailActivity extends AppCompatActivity {
         });
     }
 }
-binding.boom.setButtonEnum(ButtonEnum.SimpleCircle);
-        binding.boom.setPiecePlaceEnum(PiecePlaceEnum.DOT_6_1);
-        binding.boom.setButtonPlaceEnum(ButtonPlaceEnum.SC_6_1);
-
-        int number = binding.boom.getButtonPlaceEnum().buttonNumber();
-        int[] drawableResources = new int[]{
-        R.drawable.picture,
-        R.drawable.video,
-        R.drawable.headphone,
-        R.drawable.location,
-        R.drawable.phones,
-        R.drawable.document
-
-        };
-        for (int i = 0; i < number; i++) {
-        SimpleCircleButton.Builder builder = new SimpleCircleButton.Builder()
-        .normalImageRes(drawableResources[i]).listener(new OnBMClickListener() {
-@Override
-public void onBoomButtonClick(int index) {
-        buttonClicked(index);
-        }
-        });
-        binding.boom.addBuilder(builder);
-        }
