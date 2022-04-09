@@ -30,7 +30,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         SharedPrefManager.getInstance(getApplicationContext()).storeToken(token);
     }
 
-    public static void senPushNotification(final String body, final String title, final String fcmToken) {
+    public static void senPushNotification(final String body, final String title, final String fcmToken,final  String time) {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
@@ -39,7 +39,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     JSONObject json = new JSONObject();
                     JSONObject notificationJson = new JSONObject();
                     JSONObject dataJson = new JSONObject();
-                    notificationJson.put("body", body);
+                    notificationJson.put("body", body+"     "+time);
                     notificationJson.put("title", title);
                     notificationJson.put("priority", "high");
                     dataJson.put("message",body);

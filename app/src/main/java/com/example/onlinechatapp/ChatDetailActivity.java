@@ -53,6 +53,8 @@ public class ChatDetailActivity extends AppCompatActivity {
     String profile_pic;
     String SenderRoom, ReceiverRoom;
 
+    String myusername;
+
     boolean notify = false;
 
     @Override
@@ -78,6 +80,8 @@ public class ChatDetailActivity extends AppCompatActivity {
 
         SenderRoom = senderId + receiverId;
         ReceiverRoom = receiverId + senderId;
+
+
 
 
         final ArrayList<Message_Model> message_models = new ArrayList<>();
@@ -152,11 +156,18 @@ public class ChatDetailActivity extends AppCompatActivity {
                 message_model.setTimestamp(timestamp);
                 message_model.setTime(time);
 
+                firestore.collection("Users").document(auth.getCurrentUser().getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                        myusername = String.valueOf(value.get("username"));
+                    }
+                });
+
                 FirebaseFirestore.getInstance().collection("Users").document(receiverId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
                     public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                         String token = String.valueOf(value.get("token"));
-                        MyFirebaseMessagingService.senPushNotification(msg, "username", token);
+                        MyFirebaseMessagingService.senPushNotification(msg,myusername, token,time);
                     }
                 });
 
