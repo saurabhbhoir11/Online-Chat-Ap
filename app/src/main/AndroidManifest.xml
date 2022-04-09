@@ -16,6 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.OnlineChatApp">
         <activity
+            android:name=".ParticipantActivity"
+            android:exported="false" />
+        <activity
             android:name=".Video"
             android:exported="false" />
         <activity
