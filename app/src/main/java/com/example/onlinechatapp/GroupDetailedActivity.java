@@ -7,9 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.onlinechatapp.Adapter.ChatRoomAdapter;
 import com.example.onlinechatapp.Adapter.GroupChatAdapter;
-import com.example.onlinechatapp.Adapter.HaveNotAdapter;
 import com.example.onlinechatapp.Adapter.NamesAdapter;
-import com.example.onlinechatapp.Adapter.haveAdapter;
 import com.example.onlinechatapp.databinding.ActivityGroupDetailedBinding;
 import com.example.onlinechatapp.models.GroupChat;
 import com.example.onlinechatapp.models.Users;
@@ -40,8 +38,6 @@ public class GroupDetailedActivity extends AppCompatActivity {
     private List<String> allhavenotlist;
     ChatRoomAdapter adapter2;
     NamesAdapter namesAdapter;
-    HaveNotAdapter adapterhavenot;
-    haveAdapter adapterhave;
     float count1, count2, totalcount, countskip, perc1, perc2;
     private ArrayList<GroupChat> groupChatList;
     String Role;

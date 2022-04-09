@@ -187,7 +187,7 @@ public class GroupChatAdapter extends RecyclerView.Adapter{
             }
             //((RecieverViewHolder)holder).recievertime.setText(grpmodel.getTime());
             ((RecieverViewHolder) holder).recieverMsg.setText(grpmodel.getMsg());
-            FirebaseFirestore.getInstance().collection("Users").orderBy("userid").equals(grpmodel.getSender()).
+            //FirebaseFirestore.getInstance().collection("Users").orderBy("userid").equals(grpmodel.getSender()).
 
         }
     }

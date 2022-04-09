@@ -36,6 +36,8 @@ public class ChatAdapter extends RecyclerView.Adapter {
     private Context context;
     int receiver_View_Type = 1;
     int sender_View_Type = 2;
+    String API_KEY="";
+
 
     public ChatAdapter(ArrayList<Message_Model> messageModel, Context context) {
         this.messageModels = messageModel;
@@ -94,8 +96,9 @@ public class ChatAdapter extends RecyclerView.Adapter {
                 ((SenderViewHolder) holder).location.setVisibility(View.VISIBLE);
                 ((SenderViewHolder) holder).sendertime.setText(messageModel.getTime());
 
-
-
+                String url="https://maps.googleapis.com/maps/api/staticmap?center="+messageModel.getLat()+","+messageModel.getLon()+"&zoom=14&size=400x400&key=AIzaSyDRSh_tZk6KOKnk5-OJgsw_7yhCJ9kj4jE";
+                Toast.makeText(context, ""+url, Toast.LENGTH_SHORT).show();
+                Glide.with(context).load(url).into(((SenderViewHolder) holder).location);
                 ((SenderViewHolder) holder).location.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
