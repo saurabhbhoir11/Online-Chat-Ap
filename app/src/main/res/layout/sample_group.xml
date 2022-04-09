@@ -48,10 +48,10 @@
 
                 <TextView
                     android:id="@+id/sender_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="100dp"
+                    android:layout_height="20dp"
                     android:layout_marginTop="2dp"
-                    android:layout_weight="1"
+                    android:maxWidth="100dp"
                     android:text="sender name:"
                     android:textColor="#787878"
                     android:textSize="16sp"
@@ -59,20 +59,20 @@
 
                 <TextView
                     android:id="@+id/last_msg1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
                     android:layout_gravity="top"
                     android:layout_marginTop="2dp"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:text="This is a last messae"
                     android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/grp_time"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:layout_weight="4"
+                    android:layout_weight="2.5"
                     android:gravity="bottom|right"
                     android:text="00:00 PM"
                     android:textSize="12sp" />

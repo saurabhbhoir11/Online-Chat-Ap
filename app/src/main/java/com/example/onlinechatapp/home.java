@@ -58,7 +58,6 @@ public class home extends AppCompatActivity {
                             public void onSuccess(Void unused) {
                                 String msg = token;
                                 Log.d(TAG, msg);
-                                Toast.makeText(home.this, msg, Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
