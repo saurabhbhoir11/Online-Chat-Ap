@@ -13,21 +13,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.mainactivity.PhotoView;
-import com.example.mainactivity.Videos;
+import com.example.onlinechatapp.PhotoView;
+import com.example.onlinechatapp.Video;
 import com.example.onlinechatapp.R;
 import com.example.onlinechatapp.models.GroupChat;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.Collator;
 import java.util.ArrayList;
 
 public class GroupChatAdapter extends RecyclerView.Adapter{
@@ -61,10 +57,6 @@ public class GroupChatAdapter extends RecyclerView.Adapter{
             View view = LayoutInflater.from(context).inflate(R.layout.group_sender, parent, false);
             return new SenderViewHolder(view);
         }
-        else if(viewType==System_view_type){
-            View view = LayoutInflater.from(context).inflate(R.layout.sample_system, parent, false);
-            return new SystemViewHolder(view);
-        }
         else {
             View view = LayoutInflater.from(context).inflate(R.layout.receiverroom, parent, false);
             return new RecieverViewHolder(view);
@@ -73,15 +65,6 @@ public class GroupChatAdapter extends RecyclerView.Adapter{
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         GroupChat grpmodel = GroupChatModel.get(position);
-        if(holder.getClass()==SystemViewHolder.class){
-            if (grpmodel.getSystemmsg().equals("has Started Would You Rather game")) {
-                ((SystemViewHolder) holder).rather_game.setVisibility(View.VISIBLE);
-            }
-            else
-            {
-                ((SystemViewHolder) holder).rather_game.setVisibility(View.VISIBLE);
-            }
-        }
        if (holder.getClass() == SenderViewHolder.class) {
             if (grpmodel.getMsg().equals("*Photo*")) {
                 Glide.with(context).load(grpmodel.getImageUrl()).into(((SenderViewHolder) holder).photo);
@@ -119,7 +102,7 @@ public class GroupChatAdapter extends RecyclerView.Adapter{
                 ((SenderViewHolder) holder).play.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent vid = new Intent(context, Videos.class);
+                        Intent vid = new Intent(context, Video.class);
                         vid.putExtra("video", grpmodel.getVideoUrl());
                         context.startActivity(vid);
                     }
@@ -187,7 +170,7 @@ public class GroupChatAdapter extends RecyclerView.Adapter{
                 ((RecieverViewHolder) holder).play2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent vid = new Intent(context, Videos.class);
+                        Intent vid = new Intent(context, Video.class);
                         vid.putExtra("video",grpmodel.getVideoUrl());
                         context.startActivity(vid);
                     }
@@ -204,29 +187,8 @@ public class GroupChatAdapter extends RecyclerView.Adapter{
             }
             //((RecieverViewHolder)holder).recievertime.setText(grpmodel.getTime());
             ((RecieverViewHolder) holder).recieverMsg.setText(grpmodel.getMsg());
-            DatabaseReference ref= FirebaseDatabase.getInstance().getReference("Users");
-            ref.orderByChild("userid").equalTo(grpmodel.getSender()).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    for(DataSnapshot snapshot1:snapshot.getChildren()){
-                        String name= ""+snapshot1.child("username").getValue();
-                        String profile= ""+snapshot1.child("profilepic").getValue();
+            FirebaseFirestore.getInstance().collection("Users").orderBy("userid").equals(grpmodel.getSender()).
 
-                        ((RecieverViewHolder) holder).sendname.setText(name);
-                        if(profile!=null) {
-                            Glide.with(context).load(profile).placeholder(R.drawable.user).into(((RecieverViewHolder) holder).send_prof);
-                        }
-                        else {
-                            Glide.with(context).load(R.drawable.user).into(((RecieverViewHolder) holder).send_prof);
-                        }
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
         }
     }
 
@@ -250,16 +212,6 @@ public class GroupChatAdapter extends RecyclerView.Adapter{
             thumbnail2=itemView.findViewById(R.id.thumbnail2);
             sendname=itemView.findViewById(R.id.sendname);
             send_prof=itemView.findViewById(R.id.sender_profile);
-        }
-    }
-    public class SystemViewHolder extends RecyclerView.ViewHolder {
-        TextView systemmsg,option1,option2;
-        CardView rather_game;
-        public SystemViewHolder(@NonNull View itemView) {
-            super(itemView);
-            rather_game=itemView.findViewById(R.id.rather_game);
-            option1=itemView.findViewById(R.id.question);
-            option2=itemView.findViewById(R.id.option2);
         }
     }
 

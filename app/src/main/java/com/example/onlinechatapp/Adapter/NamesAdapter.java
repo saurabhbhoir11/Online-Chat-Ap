@@ -9,8 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mainactivity.R;
-import com.example.mainactivity.models.Users;
+import com.example.onlinechatapp.R;
+import com.example.onlinechatapp.models.Users;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ public class NamesAdapter extends RecyclerView.Adapter<NamesAdapter.ViewHolder> 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.partiname, parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.parti_name, parent, false);
         return new ViewHolder(view);
     }
 

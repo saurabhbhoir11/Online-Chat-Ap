@@ -71,4 +71,6 @@ public class GroupModel { String groupId,groupTitle,groupDesc,groupIcon,timestam
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
     }
+
+
 }
