@@ -40,7 +40,7 @@ public class PhoneLoginActivity extends AppCompatActivity {
     FirebaseFirestore firestore;
     String otp;
     FirebaseUser user;
-    int a=0;
+    int a=1;
 
 
     @Override
@@ -118,11 +118,11 @@ public class PhoneLoginActivity extends AppCompatActivity {
                     users.setUserid(user.getUid());
 
 
-                    firestore.collection("Users").document(user.getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    firestore.collection("Users").document(user.getUid()).collection("username").addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
-                        public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                            if(value.exists()){
-                                a=1;
+                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                            if (value!=null){
+                                a=0;
                             }
                         }
                     });
