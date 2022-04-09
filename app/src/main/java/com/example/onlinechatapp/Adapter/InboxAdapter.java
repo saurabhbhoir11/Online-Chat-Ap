@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,14 +17,12 @@ import com.example.onlinechatapp.ChatDetailActivity;
 import com.example.onlinechatapp.OtherUserProfile;
 import com.example.onlinechatapp.R;
 import com.example.onlinechatapp.models.Users;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.viewholder> {
     ArrayList<Users> list;
@@ -97,7 +94,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.viewholder> 
             image = itemView.findViewById(R.id.prof_pic);
             UserName = itemView.findViewById(R.id.user_name);
             LastMsg = itemView.findViewById(R.id.last_msg);
-            time = itemView.findViewById(R.id.time);
+            time = itemView.findViewById(R.id.grp_time);
         }
     }
 }
