@@ -204,7 +204,7 @@
                             android:layout_marginBottom="5dp"
                             android:scaleType="fitXY"
                             android:src="@android:drawable/stat_sys_phone_call"
-                            app:tint="#A3A3A3" />
+                            android:tint="#A3A3A3" />
 
                         <TextView
                             android:id="@+id/textView3"

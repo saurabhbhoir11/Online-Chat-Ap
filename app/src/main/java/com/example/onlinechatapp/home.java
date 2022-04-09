@@ -49,7 +49,6 @@ public class home extends AppCompatActivity {
                             Log.w(TAG, "Fetching FCM registration token failed", task.getException());
                             return;
                         }
-                        Toast.makeText(home.this, "hello", Toast.LENGTH_SHORT).show();
                         // Get new FCM registration token
                         String token = task.getResult();
                         HashMap<String,Object> hashMap=new HashMap<>();

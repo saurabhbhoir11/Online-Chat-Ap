@@ -164,6 +164,7 @@
                     app:cardElevation="0dp">
 
                     <LinearLayout
+                        android:id="@+id/phone_login2"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@drawable/phone_back"

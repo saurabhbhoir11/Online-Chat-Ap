@@ -2,6 +2,7 @@
 package com.example.onlinechatapp;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -10,16 +11,24 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.onlinechatapp.databinding.ActivityPhoneLoginBinding;
+import com.example.onlinechatapp.models.Users;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.auth.Token;
 
 import java.util.concurrent.TimeUnit;
@@ -28,8 +37,10 @@ public class PhoneLoginActivity extends AppCompatActivity {
     ActivityPhoneLoginBinding binding;
     FirebaseAuth auth;
     String mVerificationId;
-    Token mResendToken;
+    FirebaseFirestore firestore;
     String otp;
+    FirebaseUser user;
+    int a=0;
 
 
     @Override
@@ -38,6 +49,7 @@ public class PhoneLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(binding.getRoot());
         auth = FirebaseAuth.getInstance();
+        firestore=FirebaseFirestore.getInstance();
 
         binding.countCode.registerCarrierNumberEditText(binding.editTextPhone);
 
@@ -101,7 +113,31 @@ public class PhoneLoginActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    startActivity(new Intent(PhoneLoginActivity.this, home.class));
+                    user = auth.getCurrentUser();
+                    Users users=new Users();
+                    users.setUserid(user.getUid());
+
+
+                    firestore.collection("Users").document(user.getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                            if(value.exists()){
+                                a=1;
+                            }
+                        }
+                    });
+
+                    firestore.collection("Users").document(user.getUid()).set(users).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            if(a==0) {
+                                startActivity(new Intent(PhoneLoginActivity.this, usernameactivity.class));
+                            }
+                            else{
+                                startActivity(new Intent(PhoneLoginActivity.this, home.class));
+                            }
+                        }
+                    });
                 } else {
                     Toast.makeText(PhoneLoginActivity.this, "Something went wrong", Toast.LENGTH_SHORT).show();
                 }

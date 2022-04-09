@@ -24,8 +24,10 @@ public class Login extends AppCompatActivity {
         auth=FirebaseAuth.getInstance();
 
 
+
         if (auth.getCurrentUser() != null) {
-            if(!auth.getCurrentUser().isEmailVerified()) {
+
+            if(!auth.getCurrentUser().isEmailVerified()&&auth.getCurrentUser().getPhoneNumber()==null) {
                 Toast.makeText(this, "Please Verify Email First", Toast.LENGTH_SHORT).show();
             }
             else {
@@ -34,6 +36,13 @@ public class Login extends AppCompatActivity {
                 finish();
             }
         }
+
+        binding.phoneLogin2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Login.this,PhoneLoginActivity.class));
+            }
+        });
 
         binding.loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override

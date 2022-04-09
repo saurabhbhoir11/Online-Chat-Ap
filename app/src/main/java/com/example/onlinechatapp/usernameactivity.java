@@ -28,6 +28,7 @@ public class usernameactivity extends AppCompatActivity {
     FirebaseAuth auth;
     FirebaseFirestore firestore;
     int a=0;
+    boolean name=true;
 
 
     @Override
@@ -40,6 +41,14 @@ public class usernameactivity extends AppCompatActivity {
         firestore = FirebaseFirestore.getInstance();
 
         //getSupportActionBar().hide();
+        firestore.collection("Users").document(auth.getCurrentUser().getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                if(value.get("name")==null){
+                    name=false;
+                }
+            }
+        });
 
         binding.contBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,7 +72,11 @@ public class usernameactivity extends AppCompatActivity {
                                 binding.tickImg.setVisibility(View.VISIBLE);
 
                                 HashMap<String,Object> hashMap=new HashMap<>();
+                                if(!name){
+                                    hashMap.put("name",binding.username.getText().toString());
+                                }
                                 hashMap.put("username",binding.username.getText().toString());
+
 
                                     firestore.collection("Users").document(auth.getCurrentUser().getUid()).update(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
