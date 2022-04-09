@@ -204,6 +204,23 @@
         android:orientation="horizontal"
         android:padding="5dp">
 
+        <EditText
+            android:id="@+id/sendmsg2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:autoLink="web|map|email"
+            android:background="@drawable/cornerradius"
+            android:ems="10"
+            android:hint="Type A Message..."
+            android:inputType="textLongMessage|textAutoCorrect|textMultiLine|textImeMultiLine"
+            android:maxHeight="100dp"
+            android:padding="2dp"
+            android:textColorLink="#03A9F4"
+            app:allowedMimeTypes="images" />
+
 
         <ImageView
             android:id="@+id/grpgame"
