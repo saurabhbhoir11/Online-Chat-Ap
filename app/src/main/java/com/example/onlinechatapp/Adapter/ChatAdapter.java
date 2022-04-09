@@ -94,6 +94,8 @@ public class ChatAdapter extends RecyclerView.Adapter {
                 ((SenderViewHolder) holder).location.setVisibility(View.VISIBLE);
                 ((SenderViewHolder) holder).sendertime.setText(messageModel.getTime());
 
+
+
                 ((SenderViewHolder) holder).location.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
