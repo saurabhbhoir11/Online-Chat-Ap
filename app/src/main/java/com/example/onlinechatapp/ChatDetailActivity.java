@@ -1,10 +1,16 @@
 package com.example.onlinechatapp;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.provider.ContactsContract;
+import android.provider.Settings;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -13,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
@@ -20,6 +27,8 @@ import com.example.onlinechatapp.Adapter.ChatAdapter;
 import com.example.onlinechatapp.Notifications.MyFirebaseMessagingService;
 import com.example.onlinechatapp.databinding.ActivityChatDetailBinding;
 import com.example.onlinechatapp.models.Message_Model;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -52,8 +61,11 @@ public class ChatDetailActivity extends AppCompatActivity {
     String username;
     String profile_pic;
     String SenderRoom, ReceiverRoom;
+    FusedLocationProviderClient mFusedLocationClient;
 
     String myusername;
+    int PERMISSION_ID = 40;
+    int a = 1, b = 0;
 
     boolean notify = false;
 
@@ -80,8 +92,6 @@ public class ChatDetailActivity extends AppCompatActivity {
 
         SenderRoom = senderId + receiverId;
         ReceiverRoom = receiverId + senderId;
-
-
 
 
         final ArrayList<Message_Model> message_models = new ArrayList<>();
@@ -167,7 +177,7 @@ public class ChatDetailActivity extends AppCompatActivity {
                     @Override
                     public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                         String token = String.valueOf(value.get("token"));
-                        MyFirebaseMessagingService.senPushNotification(msg,myusername, token,time);
+                        MyFirebaseMessagingService.senPushNotification(msg, myusername, token, time);
                     }
                 });
 
@@ -214,14 +224,123 @@ public class ChatDetailActivity extends AppCompatActivity {
             image.setAction(Intent.ACTION_GET_CONTENT);
             image.setType("image/*");
             startActivityForResult(image, 20);
-        }
-        if (index == 1) {
+        } else if (index == 1) {
             Intent video = new Intent();
             video.setAction(Intent.ACTION_GET_CONTENT);
             video.setType("video/*");
             startActivityForResult(video, 30);
+        } else if (index == 4) {
+            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(ChatDetailActivity.this);
+            getCurrentLocation();
         }
     }
+
+
+    private void getCurrentLocation() {
+        if (checkPermissions()) {
+
+            // check if location is enabled
+            if (isLocationEnabled()) {
+
+                if (ActivityCompat.checkSelfPermission(ChatDetailActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ChatDetailActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+                mFusedLocationClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Location> task) {
+                        Location location = task.getResult();
+                        if (location == null && b == 0) {
+                            finish();
+                            startActivity(getIntent());
+                        } else {
+
+                            Toast.makeText(ChatDetailActivity.this, "Location Sent", Toast.LENGTH_SHORT).show();
+                            String msg = binding.userMessage.getText().toString();
+                            final Message_Model model = new Message_Model(msg, senderId);
+                            Calendar ctime = Calendar.getInstance();
+                            SimpleDateFormat currenttime = new SimpleDateFormat("hh:mm:aa");
+                            final String savetime = currenttime.format(ctime.getTime());
+                            String timestamp = String.valueOf(System.currentTimeMillis());
+
+                            model.setTimestamp(timestamp);
+                            model.setMsg("$ncw$&nwcbwcwjdd!@cnwkcScwxj#5cjwc9qw8dw5cn");
+                            model.setTime(savetime);
+                            model.setLat(String.valueOf(location.getLatitude()));
+                            model.setLon(String.valueOf(location.getLongitude()));
+                            binding.userMessage.setText("");
+
+                            firestore.collection("chats").document(SenderRoom).collection(SenderRoom).add(model).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                @Override
+                                public void onSuccess(DocumentReference documentReference) {
+                                    firestore.collection("chats").document(ReceiverRoom).collection(ReceiverRoom).add(model).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                        @Override
+                                        public void onSuccess(DocumentReference documentReference) {
+                                            chatAdapter.notifyDataSetChanged();
+                                        }
+                                    });
+                                }
+                            });
+
+                            b = 1;
+                        }
+                    }
+                });
+            } else {
+                Toast.makeText(ChatDetailActivity.this, "Please Turn On Your Location", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            }
+        } else {
+            // if permissions aren't available,
+            // request for permissions
+            requestPermissions();
+        }
+    }
+
+    private boolean checkPermissions() {
+        return ActivityCompat.checkSelfPermission(ChatDetailActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ChatDetailActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+
+        // If we want background location
+        // on Android 10.0 and higher,
+        // use:
+        // ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED
+    }
+
+    // method to request for permissions
+    private void requestPermissions() {
+        ActivityCompat.requestPermissions(ChatDetailActivity.this, new String[]{
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_ID);
+    }
+
+    // method to check
+    // if location is enabled
+    private boolean isLocationEnabled() {
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+    }
+
+    // If everything is alright then
+    @Override
+    public void
+    onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == PERMISSION_ID) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getCurrentLocation();
+            }
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (checkPermissions() && isLocationEnabled()) {
+            //getCurrentLocation();
+        }
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

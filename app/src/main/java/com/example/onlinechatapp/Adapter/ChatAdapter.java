@@ -72,6 +72,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
                 ((SenderViewHolder) holder).img_layout.setVisibility(View.VISIBLE);
                 ((SenderViewHolder) holder).image1.setVisibility(View.VISIBLE);
                 ((SenderViewHolder) holder).senderMsg.setVisibility(View.GONE);
+                ((SenderViewHolder) holder).location.setVisibility(View.GONE);
                 ((SenderViewHolder) holder).sendertime.setText(messageModel.getTime());
 
                 /*((SenderViewHolder) holder).image1.setOnClickListener(new View.OnClickListener() {
@@ -86,9 +87,27 @@ public class ChatAdapter extends RecyclerView.Adapter {
             else if(messageModel.getMsg().equals("$2y$10$4S0nmurvLkIkLbjnUZMrOu/IWViv87UzRB2v5hcBVzbGDUkw.3D..")){
 
             }
+            else if(messageModel.getMsg().equals("$ncw$&nwcbwcwjdd!@cnwkcScwxj#5cjwc9qw8dw5cn")){
+                ((SenderViewHolder) holder).img_layout.setVisibility(View.GONE);
+                ((SenderViewHolder) holder).image1.setVisibility(View.GONE);
+                ((SenderViewHolder) holder).senderMsg.setVisibility(View.GONE);
+                ((SenderViewHolder) holder).location.setVisibility(View.VISIBLE);
+                ((SenderViewHolder) holder).sendertime.setText(messageModel.getTime());
+
+                ((SenderViewHolder) holder).location.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String uri = "http://maps.google.com/maps?daddr=" + messageModel.getLat() + "," + messageModel.getLon();
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                        context.startActivity(intent);
+                    }
+                });
+
+            }
             else {
                 ((SenderViewHolder) holder).img_layout.setVisibility(View.GONE);
                 ((SenderViewHolder) holder).senderMsg.setVisibility(View.VISIBLE);
+                ((SenderViewHolder) holder).location.setVisibility(View.GONE);
                 ((SenderViewHolder) holder).sendertime.setText(messageModel.getTime());
                 ((SenderViewHolder) holder).senderMsg.setText(messageModel.getMsg());
             }
@@ -99,10 +118,28 @@ public class ChatAdapter extends RecyclerView.Adapter {
                 ((RecieverViewHolder) holder).img_layout2.setVisibility(View.VISIBLE);
                 ((RecieverViewHolder) holder).image2.setVisibility(View.VISIBLE);
                 ((RecieverViewHolder) holder).recieverMsg.setVisibility(View.GONE);
+                ((RecieverViewHolder) holder).location1.setVisibility(View.GONE);
                 ((RecieverViewHolder) holder).recievertime.setText(messageModel.getTime());
+            }
+            else if(messageModel.getMsg().equals("$ncw$&nwcbwcwjdd!@cnwkcScwxj#5cjwc9qw8dw5cn")){
+                ((RecieverViewHolder) holder).img_layout2.setVisibility(View.GONE);
+                ((RecieverViewHolder) holder).image2.setVisibility(View.GONE);
+                ((RecieverViewHolder) holder).recieverMsg.setVisibility(View.GONE);
+                ((RecieverViewHolder) holder).location1.setVisibility(View.VISIBLE);
+                ((RecieverViewHolder) holder).recievertime.setText(messageModel.getTime());
+                ((RecieverViewHolder) holder).location1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String uri = "http://maps.google.com/maps?daddr=" + messageModel.getLat() + "," + messageModel.getLon();
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                        context.startActivity(intent);
+                    }
+                });
             }
             else {
                 ((RecieverViewHolder) holder).recieverMsg.setVisibility(View.VISIBLE);
+                ((RecieverViewHolder) holder).location1.setVisibility(View.GONE);
+                ((RecieverViewHolder) holder).img_layout2.setVisibility(View.GONE);
                 ((RecieverViewHolder) holder).recievertime.setText(messageModel.getTime());
                 ((RecieverViewHolder) holder).recieverMsg.setText(messageModel.getMsg());
             }
@@ -118,6 +155,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
         TextView recieverMsg, recievertime;
         CardView img_layout2;
         ImageView image2;
+        ImageView location1;
 
 
         public RecieverViewHolder(@NonNull View itemView) {
@@ -126,6 +164,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
             recievertime = itemView.findViewById(R.id.rec_time);
             img_layout2= itemView.findViewById(R.id.image_card2);
             image2 = itemView.findViewById(R.id.image2);
+            location1= itemView.findViewById(R.id.mylocation2);
         }
     }
 
@@ -133,6 +172,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
         TextView senderMsg, sendertime;
         CardView img_layout;
         ImageView image1;
+        ImageView location;
 
         public SenderViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -140,6 +180,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
             sendertime = itemView.findViewById(R.id.send_time);
             img_layout= itemView.findViewById(R.id.image_card);
             image1 = itemView.findViewById(R.id.image);
+            location = itemView.findViewById(R.id.mylocation);
         }
     }
 }

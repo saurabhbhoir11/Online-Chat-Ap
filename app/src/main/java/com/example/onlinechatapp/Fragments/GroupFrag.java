@@ -5,11 +5,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.onlinechatapp.Adapter.GroupAdapter;
 import com.example.onlinechatapp.CreateGroup;
 import com.example.onlinechatapp.R;
 import com.example.onlinechatapp.databinding.FragmentGroupBinding;
@@ -29,7 +31,7 @@ public class GroupFrag extends Fragment {
     FirebaseAuth auth;
     private ArrayList<GroupModel> GroupList;
     FirebaseFirestore firestore;
-    //private GroupAdapter groupAdapter;
+    private GroupAdapter groupAdapter;
 
     public GroupFrag() {
         // Required empty public constructor
@@ -39,15 +41,15 @@ public class GroupFrag extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding=FragmentGroupBinding.inflate(inflater,container,false);
-        auth= FirebaseAuth.getInstance();
-        firestore=FirebaseFirestore.getInstance();
+        binding = FragmentGroupBinding.inflate(inflater, container, false);
+        auth = FirebaseAuth.getInstance();
+        firestore = FirebaseFirestore.getInstance();
 
 
-        binding.crtgrpBtn.setOnClickListener(new View.OnClickListener(){
+        binding.crtgrpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent= new Intent(getActivity(), CreateGroup.class);
+                Intent intent = new Intent(getActivity(), CreateGroup.class);
                 startActivity(intent);
             }
         });
@@ -56,35 +58,33 @@ public class GroupFrag extends Fragment {
         return binding.getRoot();
     }
 
-    private void loadGroups(){
-        GroupList =new ArrayList<>();
-        CollectionReference ref= firestore.collection("groups");
-        ref.addSnapshotListener(new EventListener<QuerySnapshot>() {
+    private void loadGroups() {
+        GroupList = new ArrayList<>();
+        firestore.collection("groups").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 GroupList.clear();
-                for(DocumentSnapshot snapshot:value.getDocuments()){
-                    /*if(snapshot.getDocumentReference("Participants").collection(auth.getCurrentUser().getUid()).document("uid").){
+                assert value != null;
+                for (DocumentSnapshot snapshot : value.getDocuments()) {
+                    Toast.makeText(getContext(), "" + snapshot.get("timestamp"), Toast.LENGTH_SHORT).show();
+                    firestore.collection("groups").document(String.valueOf(snapshot.get("timestamp"))).collection("Participants").addSnapshotListener(new EventListener<QuerySnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                            for (DocumentSnapshot snapshot1 : value.getDocuments()) {
+                                if (snapshot1.get("uid").equals(auth.getCurrentUser().getUid())) {
+                                    GroupModel model = snapshot.toObject(GroupModel.class);
+                                    GroupList.add(model);
+                                    groupAdapter = new GroupAdapter(getContext(), GroupList);
+                                    binding.grpList.setAdapter(groupAdapter);
+                                    groupAdapter.notifyDataSetChanged();
+                                }
+                            }
+                        }
+                    });
 
-                    }*/
                 }
             }
         });
 
-                /*for(DataSnapshot snapshot1:snapshot.getChildren()){
-                    if(snapshot1.child("Participants").child(auth.getCurrentUser().getUid()).exists()){
-                        GroupModel model= snapshot1.getValue(GroupModel.class);
-                        GroupList.add(model);
-                    }
-                }
-                groupAdapter=new GroupAdapter(getContext(),GroupList);
-                binding.grplist.setAdapter(groupAdapter);
-                groupAdapter.notifyDataSetChanged();
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error){
-
-            }
-        });*/
     }
 }
