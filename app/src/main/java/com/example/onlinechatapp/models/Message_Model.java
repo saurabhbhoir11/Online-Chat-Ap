@@ -1,14 +1,13 @@
 package com.example.onlinechatapp.models;
 
 public class Message_Model {
-    String msg,userid,time,timestamp,imageUrl;
+    String msg,userid,time,timestamp, VideoUrl, ImageUrl;
 
-    public Message_Model(String msg,String userid,String time,String timestamp,String imageUrl){
+    public Message_Model(String msg,String userid,String time,String timestamp){
         this.msg=msg;
         this.userid=userid;
         this.time=time;
         this.timestamp=timestamp;
-        this.imageUrl=imageUrl;
     }
 
     public Message_Model(String msg,String userid){
@@ -42,14 +41,6 @@ public class Message_Model {
         this.userid = userid;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
     public String getTimestamp() {
         return timestamp;
     }
@@ -57,5 +48,22 @@ public class Message_Model {
     public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
+
+    public String getVideoUrl() {
+        return VideoUrl;
+    }
+
+    public void setVideoUrl(String videoUrl) {
+        VideoUrl = videoUrl;
+    }
+
+    public String getImageUrl() {
+        return ImageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        ImageUrl = imageUrl;
+    }
+
 }
 

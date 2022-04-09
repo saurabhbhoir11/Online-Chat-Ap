@@ -14,6 +14,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.OnlineChatApp">
         <activity
+            android:name=".Video"
+            android:exported="false" />
+        <activity
+            android:name=".PhotoView"
+            android:exported="false" />
+        <activity
             android:name=".GroupDetailedActivity"
             android:exported="false" />
         <activity
