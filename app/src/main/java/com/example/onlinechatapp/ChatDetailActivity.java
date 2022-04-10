@@ -9,19 +9,18 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.akexorcist.screenshotdetection.ScreenshotDetectionDelegate;
 import com.bumptech.glide.Glide;
 import com.example.onlinechatapp.Adapter.ChatAdapter;
 import com.example.onlinechatapp.Notifications.MyFirebaseMessagingService;
@@ -49,7 +48,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
-public class ChatDetailActivity extends AppCompatActivity {
+public class ChatDetailActivity extends AppCompatActivity implements ScreenshotDetectionDelegate.ScreenshotDetectionListener {
     ActivityChatDetailBinding binding;
     FirebaseFirestore firestore;
     FirebaseAuth auth;
@@ -63,11 +62,15 @@ public class ChatDetailActivity extends AppCompatActivity {
     String SenderRoom, ReceiverRoom;
     FusedLocationProviderClient mFusedLocationClient;
 
+    int screenshot=0;
+
     String myusername;
-    int PERMISSION_ID = 40;
+    private static final int PERMISSION_ID = 40;
     int a = 1, b = 0;
+    private static final int REQUEST_CODE_READ_EXTERNAL_STORAGE_PERMISSION = 3009;
 
     boolean notify = false;
+    private ScreenshotDetectionDelegate screenshotDetectionDelegate = new ScreenshotDetectionDelegate(this, this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +82,8 @@ public class ChatDetailActivity extends AppCompatActivity {
         firebaseStorage = FirebaseStorage.getInstance();
 
         getSupportActionBar().hide();
+
+        checkReadExternalStoragePermission();
 
         senderId = auth.getCurrentUser().getUid();
         receiverId = getIntent().getStringExtra("userId");
@@ -103,6 +108,7 @@ public class ChatDetailActivity extends AppCompatActivity {
 
         binding.fUsername.setText(username);
         Glide.with(this).load(profile_pic).override(70, 70).placeholder(R.drawable.user).into(binding.dP);
+
 
         binding.menuOps.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -217,6 +223,8 @@ public class ChatDetailActivity extends AppCompatActivity {
         });
     }
 
+
+
     private void buttonClicked(int index) {
         Toast.makeText(this, "Clicked" + index, Toast.LENGTH_SHORT).show();
         if (index == 0) {
@@ -322,22 +330,20 @@ public class ChatDetailActivity extends AppCompatActivity {
 
     // If everything is alright then
     @Override
-    public void
-    onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == PERMISSION_ID) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                getCurrentLocation();
-            }
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (checkPermissions() && isLocationEnabled()) {
-            //getCurrentLocation();
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_CODE_READ_EXTERNAL_STORAGE_PERMISSION:
+                if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    Toast.makeText(this, "Please give access to External Storage", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(ChatDetailActivity.this,home.class));
+                }
+                break;
+            case PERMISSION_ID:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    getCurrentLocation();
+                }
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
 
@@ -441,4 +447,64 @@ public class ChatDetailActivity extends AppCompatActivity {
             }
         }
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        screenshotDetectionDelegate.startScreenshotDetection();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        screenshotDetectionDelegate.stopScreenshotDetection();
+    }
+
+    @Override
+    public void onScreenCaptured(String path) {
+        if(screenshot==0) {
+            Toast.makeText(this, "ScreenShot Was Captured", Toast.LENGTH_SHORT).show();
+            String msg = binding.userMessage.getText().toString();
+            final Message_Model model = new Message_Model(msg, senderId);
+            Calendar ctime = Calendar.getInstance();
+            SimpleDateFormat currenttime = new SimpleDateFormat("hh:mm:aa");
+            final String savetime = currenttime.format(ctime.getTime());
+            String timestamp = String.valueOf(System.currentTimeMillis());
+
+            model.setTimestamp(timestamp);
+            model.setMsg("Chat screenshot was taken!!!");
+            model.setTime(savetime);
+            binding.userMessage.setText("");
+
+            firestore.collection("chats").document(SenderRoom).collection(SenderRoom).add(model).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                @Override
+                public void onSuccess(DocumentReference documentReference) {
+                    firestore.collection("chats").document(ReceiverRoom).collection(ReceiverRoom).add(model).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            chatAdapter.notifyDataSetChanged();
+                            screenshot=1;
+                        }
+                    });
+                }
+            });
+        }
+
+    }
+
+    @Override
+    public void onScreenCapturedWithDeniedPermission() {
+        Toast.makeText(this, "NO SCREEN SHOT CAPTURED", Toast.LENGTH_SHORT).show();
+    }
+
+    private void checkReadExternalStoragePermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            requestReadExternalStoragePermission();
+        }
+    }
+
+    private void requestReadExternalStoragePermission() {
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE_READ_EXTERNAL_STORAGE_PERMISSION);
+    }
+
 }

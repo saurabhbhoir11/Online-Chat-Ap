@@ -66,7 +66,6 @@ public class GroupFrag extends Fragment {
                 GroupList.clear();
                 assert value != null;
                 for (DocumentSnapshot snapshot : value.getDocuments()) {
-                    Toast.makeText(getContext(), "" + snapshot.get("timestamp"), Toast.LENGTH_SHORT).show();
                     firestore.collection("groups").document(String.valueOf(snapshot.get("timestamp"))).collection("Participants").addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {

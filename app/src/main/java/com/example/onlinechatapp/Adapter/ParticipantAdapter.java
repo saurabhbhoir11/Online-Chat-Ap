@@ -16,18 +16,13 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.mainactivity.UserProfile;
+
+import com.example.onlinechatapp.OtherUserProfile;
 import com.example.onlinechatapp.R;
 import com.example.onlinechatapp.models.GroupModel;
 import com.example.onlinechatapp.models.Users;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.appbar.SubtitleCollapsingToolbarLayout;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,7 +42,7 @@ public  class ParticipantAdapter extends RecyclerView.Adapter<ParticipantAdapter
     @NonNull
     @Override
     public HolderParticipants onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(context).inflate(R.layout.sample_participants,parent,false);
+        View view= LayoutInflater.from(context).inflate(R.layout.sample_group,parent,false);
         return new HolderParticipants(view);
     }
 
@@ -69,7 +64,7 @@ public  class ParticipantAdapter extends RecyclerView.Adapter<ParticipantAdapter
            Glide.with(context).load(profile).placeholder(R.drawable.user).into(holder.partipic);
        }
 
-        DatabaseReference reference= FirebaseDatabase.getInstance().getReference("groups");
+        /*DatabaseReference reference= FirebaseDatabase.getInstance().getReference("groups");
         reference.child(groupId).child("Participants").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -80,12 +75,12 @@ public  class ParticipantAdapter extends RecyclerView.Adapter<ParticipantAdapter
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });
+        });*/
 
        holder.partipic.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
-               Intent intent=new Intent(context, UserProfile.class);
+               Intent intent=new Intent(context, OtherUserProfile.class);
                intent.putExtra("username",users.getUsername());
                intent.putExtra("profile",users.getProfilepic());
                intent.putExtra("userId",users.getUserid());
@@ -98,7 +93,7 @@ public  class ParticipantAdapter extends RecyclerView.Adapter<ParticipantAdapter
         holder.PartiLinear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DatabaseReference reference= FirebaseDatabase.getInstance().getReference("groups");
+               /* DatabaseReference reference= FirebaseDatabase.getInstance().getReference("groups");
                 reference.child(groupId).child("Participants").child(uid).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -200,7 +195,7 @@ public  class ParticipantAdapter extends RecyclerView.Adapter<ParticipantAdapter
                     public void onCancelled(@NonNull DatabaseError error) {
 
                     }
-                });
+                });*/
             }
         });
     }
@@ -208,39 +203,39 @@ public  class ParticipantAdapter extends RecyclerView.Adapter<ParticipantAdapter
     private void makeAdmin(Users users) {
         HashMap<String,Object>hashMap2=new HashMap<>();
         hashMap2.put("role","admin");
-        DatabaseReference reference= FirebaseDatabase.getInstance().getReference("groups");
+        /*DatabaseReference reference= FirebaseDatabase.getInstance().getReference("groups");
         reference.child(groupId).child("Participants").child(users.getUserid()).updateChildren(hashMap2).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 Toast.makeText(context, users.getUsername() +" Is Now Admin", Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
     }
 
     private void removeParticpant(Users users) {
-        DatabaseReference reference= FirebaseDatabase.getInstance().getReference("groups");
+       /* DatabaseReference reference= FirebaseDatabase.getInstance().getReference("groups");
         reference.child(groupId).child("Participants").child(users.getUserid()).removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 Toast.makeText(context, users.getUsername() +" Is Removed From the Room", Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
     }
 
     private void removeAdmin(Users users) {
         HashMap<String,Object>hashMap=new HashMap<>();
         hashMap.put("role","participant");
-        DatabaseReference reference= FirebaseDatabase.getInstance().getReference("groups");
+        /*DatabaseReference reference= FirebaseDatabase.getInstance().getReference("groups");
         reference.child(groupId).child("Participants").child(users.getUserid()).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 Toast.makeText(context, users.getUsername() +" is No More An Admin", Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
     }
 
     private void CheckIfAlreadyExists(Users users, HolderParticipants holder) {
-        DatabaseReference reference= FirebaseDatabase.getInstance().getReference("groups");
+       /* DatabaseReference reference= FirebaseDatabase.getInstance().getReference("groups");
         reference.child(groupId).child("Participants").child(users.getUserid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -262,7 +257,7 @@ public  class ParticipantAdapter extends RecyclerView.Adapter<ParticipantAdapter
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });
+        });*/
     }
 
     @Override
@@ -270,22 +265,20 @@ public  class ParticipantAdapter extends RecyclerView.Adapter<ParticipantAdapter
         return list.size();
     }
 
-    class HolderParticipants extends RecyclerView.ViewHolder{
-        TextView partiuser,admin,participant,creator;
-        ImageView partipic,icongrp;
-        SubtitleCollapsingToolbarLayout collapse;
+    class HolderParticipants extends RecyclerView.ViewHolder {
+        TextView partiuser, admin, participant, creator;
+        ImageView partipic, icongrp;
         LinearLayout PartiLinear;
 
         public HolderParticipants(@NonNull View itemView) {
             super(itemView);
-            partipic=itemView.findViewById(R.id.partipic);
-            admin=itemView.findViewById(R.id.admin);
-            participant=itemView.findViewById(R.id.participants);
-            creator=itemView.findViewById(R.id.creator);
-            partiuser=itemView.findViewById(R.id.partiuser);
+            /*partipic = itemView.findViewById(R.id.partipic);
+            admin = itemView.findViewById(R.id.admin);
+            participant = itemView.findViewById(R.id.participants);
+            creator = itemView.findViewById(R.id.creator);
+            partiuser = itemView.findViewById(R.id.partiuser);
             icongrp = itemView.findViewById(R.id.icongrp);
-            collapse = itemView.findViewById(R.id.collapsebar);
-            PartiLinear = itemView.findViewById(R.id.PartiLinear);
+            PartiLinear = itemView.findViewById(R.id.PartiLinear);*/
         }
     }
 }

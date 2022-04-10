@@ -97,7 +97,6 @@ public class ChatAdapter extends RecyclerView.Adapter {
                 ((SenderViewHolder) holder).sendertime.setText(messageModel.getTime());
 
                 String url="https://maps.googleapis.com/maps/api/staticmap?center="+messageModel.getLat()+","+messageModel.getLon()+"&zoom=14&size=400x400&key=AIzaSyDRSh_tZk6KOKnk5-OJgsw_7yhCJ9kj4jE";
-                Toast.makeText(context, ""+url, Toast.LENGTH_SHORT).show();
                 Glide.with(context).load(url).into(((SenderViewHolder) holder).location);
                 ((SenderViewHolder) holder).location.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -132,6 +131,8 @@ public class ChatAdapter extends RecyclerView.Adapter {
                 ((RecieverViewHolder) holder).recieverMsg.setVisibility(View.GONE);
                 ((RecieverViewHolder) holder).location1.setVisibility(View.VISIBLE);
                 ((RecieverViewHolder) holder).recievertime.setText(messageModel.getTime());
+                String url="https://maps.googleapis.com/maps/api/staticmap?center="+messageModel.getLat()+","+messageModel.getLon()+"&zoom=14&size=400x400&key=AIzaSyDRSh_tZk6KOKnk5-OJgsw_7yhCJ9kj4jE";
+                Glide.with(context).load(url).into(((RecieverViewHolder) holder).location1);
                 ((RecieverViewHolder) holder).location1.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

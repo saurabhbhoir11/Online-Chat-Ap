@@ -68,7 +68,7 @@ public class GroupDetailedActivity extends AppCompatActivity {
         firebaseStorage = FirebaseStorage.getInstance();
         auth = FirebaseAuth.getInstance();
         a = 1;
-        binding.sender2.setImageResource(R.drawable.search_buttton);
+        /*binding.sender2.setImageResource(R.drawable.search_buttton);
         senderId = auth.getUid();
         Intent intent = getIntent();
         groupId = intent.getStringExtra("groupId");
@@ -93,13 +93,13 @@ public class GroupDetailedActivity extends AppCompatActivity {
         binding.linearLayout9.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent1 = new Intent(GroupDetailedActivity.this, Partici)
+                Intent intent1 = new Intent(GroupDetailedActivity.this, Partici);
             }
-        });
+        });*/
     }
 
     private void getParticipants() {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("groups").child(groupId);
+        /*DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("groups").child(groupId);
         ref.child("Participants").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -114,11 +114,11 @@ public class GroupDetailedActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });
+        });*/
     }
 
     private void showUsers() {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users");
+        /*DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -187,11 +187,11 @@ public class GroupDetailedActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });
+        });*/
     }
 
     private void loadgrpmsg() {
-        groupChatList = new ArrayList<>();
+       /* groupChatList = new ArrayList<>();
         adapter = new GroupChatAdapter(groupChatList, GroupDetailActivity.this);
         binding.ChatRecycle2.setAdapter(adapter);
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("groups");
@@ -469,5 +469,6 @@ public class GroupDetailedActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
+    }*/
     }
 }

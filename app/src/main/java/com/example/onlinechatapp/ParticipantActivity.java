@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
+import com.example.onlinechatapp.Adapter.ParticipantAdapter;
 import com.example.onlinechatapp.databinding.ActivityParticipantBinding;
 import com.example.onlinechatapp.models.Users;
 import com.google.firebase.auth.FirebaseAuth;
@@ -45,22 +46,22 @@ public class ParticipantActivity extends AppCompatActivity {
         }
 
         adapter = new ParticipantAdapter(list, ParticipantActivity.this, groupId, grprole);
-        binding.recyclerView.setAdapter(adapter);
+       // binding.recyclerView.setAdapter(adapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        binding.recyclerView.setLayoutManager(layoutManager);
+        //binding.recyclerView.setLayoutManager(layoutManager);
 
         binding.floatingActionButton3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ParticipantActivity.this, AddParticipantActivity.class);
+                /*Intent intent = new Intent(ParticipantActivity.this, AddParticipantActivity.class);
                 intent.putExtra("groupId", groupId);
-                startActivity(intent);
+                startActivity(intent);*/
             }
         });
     }
 
     private void getParticipants() {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("groups").child(groupId);
+        /*DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("groups").child(groupId);
         ref.child("Participants").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -75,11 +76,11 @@ public class ParticipantActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });
+        });*/
     }
 
     private void showUsers() {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users");
+        /*DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -99,11 +100,11 @@ public class ParticipantActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });
+        });*/
     }
 
     private void loadGroupInfo() {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("groups");
+        /*DatabaseReference ref = FirebaseDatabase.getInstance().getReference("groups");
         ref.orderByChild("groupId").equalTo(groupId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -149,6 +150,6 @@ public class ParticipantActivity extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });
+        });*/
     }
 }
