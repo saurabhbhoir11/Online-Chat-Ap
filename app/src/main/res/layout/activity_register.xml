@@ -151,6 +151,7 @@
                     app:cardElevation="0dp">
 
                     <LinearLayout
+                        android:id="@+id/google_btn"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:background="@drawable/common_google_signin_btn_icon_dark_normal_background"

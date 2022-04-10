@@ -18,6 +18,17 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
+            android:id="@+id/screenshot2"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="-5dp"
+            android:scaleType="fitXY"
+            android:tint="#808080"
+            android:visibility="gone"
+            app:srcCompat="@drawable/camera" />
+
+        <ImageView
             android:id="@+id/mylocation2"
             android:layout_width="200dp"
             android:layout_height="150dp"

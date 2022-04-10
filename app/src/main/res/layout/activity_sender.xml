@@ -28,6 +28,17 @@
             android:visibility="gone"
             app:srcCompat="@drawable/maps" />
 
+        <ImageView
+            android:id="@+id/screenshot"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="-5dp"
+            android:scaleType="fitXY"
+            android:tint="#FFFFFF"
+            android:visibility="gone"
+            app:srcCompat="@drawable/camera" />
+
         <TextView
             android:id="@+id/send_msg"
             android:layout_width="wrap_content"

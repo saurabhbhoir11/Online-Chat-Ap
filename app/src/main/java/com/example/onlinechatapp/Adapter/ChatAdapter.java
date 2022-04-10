@@ -160,8 +160,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
     public class RecieverViewHolder extends RecyclerView.ViewHolder {
         TextView recieverMsg, recievertime;
         CardView img_layout2;
-        ImageView image2;
-        ImageView location1;
+        ImageView image2,location1,screenshot1;
 
 
         public RecieverViewHolder(@NonNull View itemView) {
@@ -171,14 +170,14 @@ public class ChatAdapter extends RecyclerView.Adapter {
             img_layout2= itemView.findViewById(R.id.image_card2);
             image2 = itemView.findViewById(R.id.image2);
             location1= itemView.findViewById(R.id.mylocation2);
+            screenshot1= itemView.findViewById(R.id.screenshot2);
         }
     }
 
     public class SenderViewHolder extends RecyclerView.ViewHolder {
         TextView senderMsg, sendertime;
         CardView img_layout;
-        ImageView image1;
-        ImageView location;
+        ImageView image1,location,screen_shot;
 
         public SenderViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -187,6 +186,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
             img_layout= itemView.findViewById(R.id.image_card);
             image1 = itemView.findViewById(R.id.image);
             location = itemView.findViewById(R.id.mylocation);
+            screen_shot = itemView.findViewById(R.id.screenshot);
         }
     }
 }

@@ -29,6 +29,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 public class PhoneLoginActivity extends AppCompatActivity {
@@ -115,6 +116,8 @@ public class PhoneLoginActivity extends AppCompatActivity {
                     user = auth.getCurrentUser();
                     Users users=new Users();
                     users.setUserid(user.getUid());
+                    HashMap<String,Object> hashMap=new HashMap<>();
+                    hashMap.put("uid",user.getUid());
 
 
                     firestore.collection("Users").document(user.getUid()).collection("username").addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -126,7 +129,7 @@ public class PhoneLoginActivity extends AppCompatActivity {
                         }
                     });
 
-                    firestore.collection("Users").document(user.getUid()).set(users).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    firestore.collection("Users").document(user.getUid()).update(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void unused) {
                             if(a==0) {
