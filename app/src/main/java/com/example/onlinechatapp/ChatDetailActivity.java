@@ -463,6 +463,7 @@ public class ChatDetailActivity extends AppCompatActivity implements ScreenshotD
     @Override
     public void onScreenCaptured(String path) {
         if(screenshot==0) {
+            screenshot=1;
             Toast.makeText(this, "ScreenShot Was Captured", Toast.LENGTH_SHORT).show();
             String msg = binding.userMessage.getText().toString();
             final Message_Model model = new Message_Model(msg, senderId);
@@ -483,7 +484,7 @@ public class ChatDetailActivity extends AppCompatActivity implements ScreenshotD
                         @Override
                         public void onSuccess(DocumentReference documentReference) {
                             chatAdapter.notifyDataSetChanged();
-                            screenshot=1;
+                            screenshot=0;
                         }
                     });
                 }
