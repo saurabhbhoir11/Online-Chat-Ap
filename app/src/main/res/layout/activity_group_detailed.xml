@@ -33,7 +33,7 @@
                 android:src="@android:drawable/ic_menu_revert" />
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/d_p"
+                android:id="@+id/groupIcon"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_margin="5dp"
@@ -42,17 +42,33 @@
                 app:civ_border_color="#FFFFFF"
                 app:civ_border_width="2dp" />
 
-            <TextView
-                android:id="@+id/f_username"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/linear_tab"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="5dp"
                 android:layout_weight="1"
-                android:gravity="center_vertical"
-                android:padding="5dp"
-                android:text="TextView"
-                android:textColor="#FFFFFF"
-                android:textSize="24sp" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/groupTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:padding="5dp"
+                    android:text="TextView"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/nameCycle"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="-10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical" />
+            </LinearLayout>
 
             <ImageView
                 android:id="@+id/imageView3"
@@ -77,11 +93,14 @@
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/chatlist"
+            android:id="@+id/chatRecycle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/receiverroom"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -107,7 +126,7 @@
             </LinearLayout>
 
             <EditText
-                android:id="@+id/user_message"
+                android:id="@+id/send_msg2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
@@ -124,7 +143,7 @@
                 tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck,SpeakableTextPresentCheck" />
 
             <ImageButton
-                android:id="@+id/send_btn"
+                android:id="@+id/send_btn2"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_marginRight="5dp"

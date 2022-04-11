@@ -125,13 +125,7 @@ public class GroupChatAdapter extends RecyclerView.Adapter{
             }
             else {
                 ((SenderViewHolder) holder).photo.setVisibility(View.GONE);
-                ((SenderViewHolder) holder).constraint.setVisibility(View.GONE);
-                ((SenderViewHolder) holder).sticker.setVisibility(View.GONE);
-                ((SenderViewHolder) holder).audio.setVisibility(View.GONE);
-                ((SenderViewHolder) holder).thumbanail.setVisibility(View.GONE);
                 ((SenderViewHolder) holder).senderMsg.setVisibility(View.VISIBLE);
-                ((SenderViewHolder) holder).play.setVisibility(View.GONE);
-                ((SenderViewHolder) holder).senderlay.setVisibility(View.VISIBLE);
 
             }
             //((SenderViewHolder) holder).sendertime.setText(grpmodel.getTime());
@@ -203,14 +197,11 @@ public class GroupChatAdapter extends RecyclerView.Adapter{
         View reclayout;
         public RecieverViewHolder(@NonNull View itemView) {
             super(itemView);
-            recieverMsg = itemView.findViewById(R.id.RecieverText);
-            recievertime = itemView.findViewById(R.id.Reciever_Time);
-            photos= itemView.findViewById(R.id.photos);
-            reclayout=itemView.findViewById(R.id.reclayout);
-            recsticker=itemView.findViewById(R.id.stkrec);
-            play2=itemView.findViewById(R.id.play2);
-            thumbnail2=itemView.findViewById(R.id.thumbnail2);
-            sendname=itemView.findViewById(R.id.sendname);
+            recieverMsg = itemView.findViewById(R.id.rec_msg2);
+            recievertime = itemView.findViewById(R.id.rec_time2);
+            photos= itemView.findViewById(R.id.grp_img);
+            //reclayout=itemView.findViewById(R.id.reclayout);
+            sendname=itemView.findViewById(R.id.sender_name);
             send_prof=itemView.findViewById(R.id.sender_profile);
         }
     }
@@ -226,16 +217,6 @@ public class GroupChatAdapter extends RecyclerView.Adapter{
             senderMsg = itemView.findViewById(R.id.Sender_Text);
             sendertime = itemView.findViewById(R.id.Sender_Time);
             photo= itemView.findViewById(R.id.photo);
-            displayname=itemView.findViewById(R.id.displayname);
-            phonenumber=itemView.findViewById(R.id.phonenum);
-            constraint=itemView.findViewById(R.id.contact);
-            icon=itemView.findViewById(R.id.contpic);
-            gif=itemView.findViewById(R.id.gif);
-            sticker=itemView.findViewById(R.id.stckr);
-            play=itemView.findViewById(R.id.play);
-            senderlay=itemView.findViewById(R.id.senderlayout);
-            thumbanail=itemView.findViewById(R.id.thumbnail);
-            audio=itemView.findViewById(R.id.audio);
         }
     }
 }

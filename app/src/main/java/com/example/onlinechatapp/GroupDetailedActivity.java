@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.onlinechatapp.Adapter.ChatRoomAdapter;
 import com.example.onlinechatapp.Adapter.GroupChatAdapter;
 import com.example.onlinechatapp.Adapter.NamesAdapter;
@@ -23,7 +24,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -37,20 +42,17 @@ public class GroupDetailedActivity extends AppCompatActivity {
 
 
     ActivityGroupDetailedBinding binding;
-    String groupId,GroupDesc,GroupIcon;
+    String groupId, GroupDesc, GroupIcon;
     FirebaseAuth auth;
     FirebaseFirestore database;
     FirebaseStorage firebaseStorage;
     String senderId;
     GroupChatAdapter adapter;
 
-    int a, stickindex;
+    int a;
     ArrayList<Users> list = new ArrayList<>();
-    ArrayList<Users> lists = new ArrayList<>();
-    ArrayList<Users> lists2 = new ArrayList<>();
-    private List<String> allList;
-    private List<String> allhavelist;
-    private List<String> allhavenotlist;
+    ArrayList<String> allList = new ArrayList<>();
+
     ChatRoomAdapter adapter2;
     NamesAdapter namesAdapter;
     float count1, count2, totalcount, countskip, perc1, perc2;
@@ -58,175 +60,113 @@ public class GroupDetailedActivity extends AppCompatActivity {
     String Role;
 
     CountDownTimer countDownTimer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         binding = ActivityGroupDetailedBinding.inflate(getLayoutInflater());
         auth = FirebaseAuth.getInstance();
+        database=FirebaseFirestore.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(binding.getRoot());
         getSupportActionBar().hide();
         firebaseStorage = FirebaseStorage.getInstance();
         auth = FirebaseAuth.getInstance();
         a = 1;
-        /*binding.sender2.setImageResource(R.drawable.search_buttton);
         senderId = auth.getUid();
         Intent intent = getIntent();
         groupId = intent.getStringExtra("groupId");
         allList = new ArrayList<>();
-        allhavelist = new ArrayList<>();
-        allhavenotlist = new ArrayList<>();
         getParticipants();
-        adapter2 = new ChatRoomAdapter(list, GroupDetailedActivity.this);
-        binding.RoomRecycle.setAdapter(adapter2);
+
+        loadGroupInfo();
+        loadgrpmsg();
 
         namesAdapter = new NamesAdapter(list, GroupDetailedActivity.this);
-        binding.namecycle.setAdapter(namesAdapter);
+        binding.nameCycle.setAdapter(namesAdapter);
 
-        binding.ChatRecycle2.onScrolled(0,100);
-        binding.sender2.setOnClickListener(new View.OnClickListener() {
+        binding.chatRecycle.onScrolled(0, 100);
+        binding.sendBtn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String msg = binding.sendmsg2.toString();
+                String msg = binding.sendMsg2.getText().toString();
                 sendMessage(msg);
             }
         });
-        binding.linearLayout9.setOnClickListener(new View.OnClickListener() {
+        binding.linearTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent1 = new Intent(GroupDetailedActivity.this, Partici);
+                startActivity(new Intent(GroupDetailedActivity.this, ParticipantActivity.class));
+
             }
-        });*/
+        });
     }
 
     private void getParticipants() {
-        /*DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("groups").child(groupId);
-        ref.child("Participants").addListenerForSingleValueEvent(new ValueEventListener() {
+        database.collection("groups").document(groupId).collection("Participants").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 allList.clear();
-                for (DataSnapshot snapshot1 : snapshot.getChildren()) {
-                    allList.add(snapshot1.getKey());
+                for (DocumentSnapshot snapshot1 : value.getDocuments()) {
+                    allList.add(snapshot1.getId());
                 }
                 showUsers();
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });*/
+        });
     }
 
     private void showUsers() {
-        /*DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users");
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        database.collection("Users").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                list.clear();
-                for (DataSnapshot snapshot1 : snapshot.getChildren()) {
-                    Users users = snapshot1.getValue(Users.class);
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                for (DocumentSnapshot snapshot : value.getDocuments()) {
+                    Users users = snapshot.toObject(Users.class);
                     for (String id : allList) {
                         if (users.getUserid().equals(id)) {
                             list.add(users);
                         }
                     }
                 }
-                adapter2.notifyDataSetChanged();
-                namesAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
-    }
 
-    private void HaveNotShow() {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users");
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                lists2.clear();
-                for (DataSnapshot snapshot1 : snapshot.getChildren()) {
-                    Users users = snapshot1.getValue(Users.class);
-                    for (String id1 : allhavenotlist) {
-                        if (users.getUserid().equals(id1)) {
-                            lists2.add(users);
-                        }
-                    }
-                }
-                adapterhavenot.notifyDataSetChanged();
-            }
+        //adapter2.notifyDataSetChanged();
+        namesAdapter.notifyDataSetChanged();
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
-    private void HaveShow() {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users");
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                lists.clear();
-                for (DataSnapshot snapshot1 : snapshot.getChildren()) {
-                    Users users = snapshot1.getValue(Users.class);
-                    for (String id2 : allhavelist) {
-                        if (users.getUserid().equals(id2)) {
-                            lists.add(users);
-                        }
-                    }
-                }
-                adapterhavenot.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });*/
     }
 
     private void loadgrpmsg() {
-       /* groupChatList = new ArrayList<>();
-        adapter = new GroupChatAdapter(groupChatList, GroupDetailActivity.this);
-        binding.ChatRecycle2.setAdapter(adapter);
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("groups");
-        ref.child(groupId).child("Messages").addValueEventListener(new ValueEventListener() {
+        groupChatList = new ArrayList<>();
+        adapter = new GroupChatAdapter(groupChatList, GroupDetailedActivity.this);
+        binding.chatRecycle.setAdapter(adapter);
+        database.collection("groups").document(groupId).collection("Messages").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 groupChatList.clear();
-                for (DataSnapshot snapshot1 : snapshot.getChildren()) {
-                    GroupChat grpmodel = snapshot1.getValue(GroupChat.class);
+                for (DocumentSnapshot snapshot1 : value.getDocuments()) {
+                    GroupChat grpmodel = snapshot1.toObject(GroupChat.class);
                     groupChatList.add(grpmodel);
-                    binding.ChatRecycle2.smoothScrollToPosition(binding.ChatRecycle2.getAdapter().getItemCount());
+                    binding.chatRecycle.smoothScrollToPosition(binding.chatRecycle.getAdapter().getItemCount());
                 }
                 adapter.notifyDataSetChanged();
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
         });
+
+
     }
 
     private void sendMessage(String msg) {
         String time = "" + System.currentTimeMillis();
         GroupChat grpmodel = new GroupChat(auth.getCurrentUser().getUid(), msg, time);
 
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("groups");
-        ref.child(groupId).child("Messages").child(time).setValue(grpmodel).addOnSuccessListener(new OnSuccessListener<Void>() {
+        database.collection("groups").document(groupId).collection("Messages").document(time).set(grpmodel).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-                binding.sendmsg2.setText("");
+                binding.sendMsg2.setText("");
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(GroupDetailActivity.this, "Message Failed To Send", Toast.LENGTH_SHORT).show();
+                Toast.makeText(GroupDetailedActivity.this, "Message Failed To Send", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -261,26 +201,22 @@ public class GroupDetailedActivity extends AppCompatActivity {
     }
 
     private void loadGroupInfo() {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("groups");
-        ref.orderByChild("groupId").equalTo(groupId).addValueEventListener(new ValueEventListener() {
+        Toast.makeText(this, ""+groupId, Toast.LENGTH_SHORT).show();
+        database.collection("groups").document(groupId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot snapshot1 : snapshot.getChildren()) {
-                    String groupTitle = "" + snapshot1.child("groupTitle").getValue();
-                    String groupDesc = "" + snapshot1.child("groupDesc").getValue();
-                    String groupIcon = "" + snapshot1.child("groupIcon").getValue();
-                    String timestamp = "" + snapshot1.child("timestamp").getValue();
-                    String createdBy = "" + snapshot1.child("createdBy").getValue();
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                String groupTitle = "" + value.get("groupTitle");
+                String groupDesc = "" + value.get("groupDesc");
+                String groupIcon = "" + value.get("groupIcon");
+                String timestamp = "" + value.get("timestamp");
+               // String createdBy = "" + value.get("createdBy").toString();
 
-                    binding.groupTitle.setText(groupTitle);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                binding.groupTitle.setText(groupTitle);
+                Glide.with(GroupDetailedActivity.this).load(groupIcon).placeholder(R.drawable.user).into(binding.groupIcon);
             }
         });
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -298,24 +234,23 @@ public class GroupDetailedActivity extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(Uri uri) {
                                         String filepath = uri.toString();
-                                        String msg = binding.sendmsg2.getText().toString();
+                                        String msg = binding.sendMsg2.getText().toString();
                                         String time = "" + System.currentTimeMillis();
                                         GroupChat model = new GroupChat(auth.getCurrentUser().getUid(), msg, time);
                                         model.setMsg("*Photo*");
                                         model.setImageUrl(filepath);
-                                        binding.sendmsg2.setText("");
+                                        binding.sendMsg2.setText("");
 
 
-                                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("groups");
-                                        ref.child(groupId).child("Messages").child(time).setValue(model).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        database.collection("groups").document(groupId).collection("Messages").document(time).set(model).addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
-                                                binding.sendmsg2.setText("");
+                                                binding.sendMsg2.setText("");
                                             }
                                         }).addOnFailureListener(new OnFailureListener() {
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
-                                                Toast.makeText(GroupDetailActivity.this, "Message Failed To Send", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(GroupDetailedActivity.this, "Message Failed To Send", Toast.LENGTH_SHORT).show();
                                             }
                                         });
                                     }
@@ -339,63 +274,21 @@ public class GroupDetailedActivity extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(Uri uri) {
                                         String filepath = uri.toString();
-                                        String msg = binding.sendmsg2.getText().toString();
+                                        String msg = binding.sendMsg2.getText().toString();
                                         String time = "" + System.currentTimeMillis();
                                         GroupChat model = new GroupChat(auth.getCurrentUser().getUid(), msg, time);
                                         model.setMsg("*Video*");
                                         model.setVideoUrl(filepath);
-                                        binding.sendmsg2.setText("");
-                                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("groups");
-                                        ref.child(groupId).child("Messages").child(time).setValue(model).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        binding.sendMsg2.setText("");
+                                        database.collection("groups").document(groupId).collection("Messages").document(time).set(model).addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
-                                                binding.sendmsg2.setText("");
+                                                binding.sendMsg2.setText("");
                                             }
                                         }).addOnFailureListener(new OnFailureListener() {
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
-                                                Toast.makeText(GroupDetailActivity.this, "Message Failed To Send", Toast.LENGTH_SHORT).show();
-                                            }
-                                        });
-                                    }
-                                });
-                            }
-                        }
-                    });
-                }
-            }
-        }
-        else if (requestCode == 90) {
-            if (data != null) {
-                if (data.getData() != null) {
-                    Uri selectaudio = data.getData();
-                    Calendar calendar = Calendar.getInstance();
-                    StorageReference reference = firebaseStorage.getReference().child("chats").child(calendar.getTimeInMillis() + "");
-                    reference.putFile(selectaudio).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-                            if (task.isSuccessful()) {
-                                reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                    @Override
-                                    public void onSuccess(Uri uri) {
-                                        String filepath = uri.toString();
-                                        String msg = binding.sendmsg2.getText().toString();
-                                        String time = "" + System.currentTimeMillis();
-                                        GroupChat model = new GroupChat(auth.getCurrentUser().getUid(), msg, time);
-                                        model.setMsg("*Audio*");
-                                        model.setAudioUrl(filepath);
-
-                                        binding.sendmsg2.setText("");
-                                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("groups");
-                                        ref.child(groupId).child("Messages").child(time).setValue(model).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                binding.sendmsg2.setText("");
-                                            }
-                                        }).addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Toast.makeText(GroupDetailActivity.this, "Message Failed To Send", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(GroupDetailedActivity.this, "Message Failed To Send", Toast.LENGTH_SHORT).show();
                                             }
                                         });
                                     }
@@ -409,66 +302,4 @@ public class GroupDetailedActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("groups");
-        ref.orderByChild("groupId").equalTo(groupId).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot snapshot1 : snapshot.getChildren()) {
-                    String Rather = "" + snapshot1.child("rather").getValue();
-                    if (Rather.equals("started")&& Role.equals("creator")) {
-                        HashMap<String,Object> hashMap=new HashMap<>();
-                        hashMap.put("rather","ends");
-                        database.getReference("groups").child(groupId).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                            }
-                        });
-                    }
-                    else {
-                        Toast.makeText(GroupDetailActivity.this, "Failed To Join", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("groups");
-        ref.orderByChild("groupId").equalTo(groupId).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot snapshot1 : snapshot.getChildren()) {
-                    String Rather = "" + snapshot1.child("rather").getValue();
-                    if (Rather.equals("started")&& Role.equals("creator")) {
-                        HashMap<String,Object> hashMap=new HashMap<>();
-                        hashMap.put("rather","ends");
-                        database.getReference("groups").child(groupId).updateChildren(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                            }
-                        });
-
-                    }
-                    else {
-                        Toast.makeText(GroupDetailActivity.this, "Failed To Join", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-            }
-        });
-    }*/
-    }
 }
