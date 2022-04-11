@@ -207,10 +207,9 @@ public class GroupChatAdapter extends RecyclerView.Adapter{
     }
 
     public class SenderViewHolder extends RecyclerView.ViewHolder {
-        TextView senderMsg, sendertime, displayname, phonenumber;
-        ImageView photo, icon, sticker,play, thumbanail;
-        Button allow,stop;
-        View constraint, senderlay,audio, location;
+        TextView senderMsg, sendertime;
+        ImageView photo, sticker,play, thumbanail;
+        View constraint, senderlay,audio;
         WebView gif;
         public SenderViewHolder(@NonNull View itemView) {
             super(itemView);
