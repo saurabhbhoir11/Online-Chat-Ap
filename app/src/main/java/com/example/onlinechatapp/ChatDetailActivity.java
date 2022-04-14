@@ -4,11 +4,13 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.view.View;
 import android.widget.Toast;
@@ -237,7 +239,13 @@ public class ChatDetailActivity extends AppCompatActivity implements ScreenshotD
             video.setAction(Intent.ACTION_GET_CONTENT);
             video.setType("video/*");
             startActivityForResult(video, 30);
-        } else if (index == 4) {
+        }
+        else if(index==2){
+            Intent pickContact = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+            pickContact.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
+            startActivityForResult(pickContact, 40);
+        }
+        else if (index == 4) {
             mFusedLocationClient = LocationServices.getFusedLocationProviderClient(ChatDetailActivity.this);
             getCurrentLocation();
         }
@@ -398,7 +406,8 @@ public class ChatDetailActivity extends AppCompatActivity implements ScreenshotD
                     });
                 }
             }
-        } else if (requestCode == 30) {
+        }
+        else if (requestCode == 30) {
             if (data != null) {
                 if (data.getData() != null) {
                     Uri selectvideo = data.getData();
@@ -444,6 +453,43 @@ public class ChatDetailActivity extends AppCompatActivity implements ScreenshotD
                         }
                     });
                 }
+            }
+        }
+        else if(requestCode==40) {
+            Uri contactData = data.getData();
+            Cursor c = getContentResolver().query(contactData, null, null, null, null);
+            if (c.moveToFirst()) {
+                int phoneIndex = c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+                int display_name= c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
+                String num = c.getString(phoneIndex);
+                String name = c.getString(display_name);
+
+                String msg = binding.userMessage.getText().toString();
+                final Message_Model model = new Message_Model(msg, senderId);
+                Calendar ctime = Calendar.getInstance();
+                SimpleDateFormat currenttime = new SimpleDateFormat("hh:mm:aa");
+                final String savetime = currenttime.format(ctime.getTime());
+                String timestamp = String.valueOf(System.currentTimeMillis());
+
+                model.setTimestamp(timestamp);
+                model.setMsg("%msjCkvjx08GH#mc0*mxvhvx4VHs13Nch!cnq-nss.uyCX7xvC");
+                model.setTime(savetime);
+                model.setNumber(num);
+                model.setDisp_name(name);
+                binding.userMessage.setText("");
+
+                firestore.collection("chats").document(SenderRoom).collection(SenderRoom).add(model).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        firestore.collection("chats").document(ReceiverRoom).collection(ReceiverRoom).add(model).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                                chatAdapter.notifyDataSetChanged();
+                            }
+                        });
+                    }
+                });
+
             }
         }
     }

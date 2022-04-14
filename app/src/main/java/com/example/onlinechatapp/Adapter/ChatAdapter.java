@@ -9,12 +9,14 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -75,6 +77,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
                 ((SenderViewHolder) holder).image1.setVisibility(View.VISIBLE);
                 ((SenderViewHolder) holder).senderMsg.setVisibility(View.GONE);
                 ((SenderViewHolder) holder).location.setVisibility(View.GONE);
+                ((SenderViewHolder) holder).cont_lay1.setVisibility(View.GONE);
                 ((SenderViewHolder) holder).sendertime.setText(messageModel.getTime());
 
                 /*((SenderViewHolder) holder).image1.setOnClickListener(new View.OnClickListener() {
@@ -93,6 +96,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
                 ((SenderViewHolder) holder).img_layout.setVisibility(View.GONE);
                 ((SenderViewHolder) holder).image1.setVisibility(View.GONE);
                 ((SenderViewHolder) holder).senderMsg.setVisibility(View.GONE);
+                ((SenderViewHolder) holder).cont_lay1.setVisibility(View.GONE);
                 ((SenderViewHolder) holder).location.setVisibility(View.VISIBLE);
                 ((SenderViewHolder) holder).sendertime.setText(messageModel.getTime());
 
@@ -108,10 +112,22 @@ public class ChatAdapter extends RecyclerView.Adapter {
                 });
 
             }
+            else if(messageModel.getMsg().equals("%msjCkvjx08GH#mc0*mxvhvx4VHs13Nch!cnq-nss.uyCX7xvC")){
+                ((SenderViewHolder) holder).img_layout.setVisibility(View.GONE);
+                ((SenderViewHolder) holder).image1.setVisibility(View.GONE);
+                ((SenderViewHolder) holder).senderMsg.setVisibility(View.GONE);
+                ((SenderViewHolder) holder).location.setVisibility(View.GONE);
+                ((SenderViewHolder) holder).cont_lay1.setVisibility(View.VISIBLE);
+
+                ((SenderViewHolder) holder).disp_name1.setText(messageModel.getDisp_name());
+                ((SenderViewHolder) holder).phone1.setText(messageModel.getNumber());
+                ((SenderViewHolder) holder).sendertime.setText(messageModel.getTime());
+            }
             else {
                 ((SenderViewHolder) holder).img_layout.setVisibility(View.GONE);
                 ((SenderViewHolder) holder).senderMsg.setVisibility(View.VISIBLE);
                 ((SenderViewHolder) holder).location.setVisibility(View.GONE);
+                ((SenderViewHolder) holder).cont_lay1.setVisibility(View.GONE);
                 ((SenderViewHolder) holder).sendertime.setText(messageModel.getTime());
                 ((SenderViewHolder) holder).senderMsg.setText(messageModel.getMsg());
             }
@@ -121,6 +137,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
                 Glide.with(context).load(messageModel.getImageUrl()).into(((RecieverViewHolder) holder).image2);
                 ((RecieverViewHolder) holder).img_layout2.setVisibility(View.VISIBLE);
                 ((RecieverViewHolder) holder).image2.setVisibility(View.VISIBLE);
+                ((RecieverViewHolder) holder).cont_lay2.setVisibility(View.GONE);
                 ((RecieverViewHolder) holder).recieverMsg.setVisibility(View.GONE);
                 ((RecieverViewHolder) holder).location1.setVisibility(View.GONE);
                 ((RecieverViewHolder) holder).recievertime.setText(messageModel.getTime());
@@ -128,6 +145,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
             else if(messageModel.getMsg().equals("$ncw$&nwcbwcwjdd!@cnwkcScwxj#5cjwc9qw8dw5cn")){
                 ((RecieverViewHolder) holder).img_layout2.setVisibility(View.GONE);
                 ((RecieverViewHolder) holder).image2.setVisibility(View.GONE);
+                ((RecieverViewHolder) holder).cont_lay2.setVisibility(View.GONE);
                 ((RecieverViewHolder) holder).recieverMsg.setVisibility(View.GONE);
                 ((RecieverViewHolder) holder).location1.setVisibility(View.VISIBLE);
                 ((RecieverViewHolder) holder).recievertime.setText(messageModel.getTime());
@@ -142,9 +160,33 @@ public class ChatAdapter extends RecyclerView.Adapter {
                     }
                 });
             }
+            else if(messageModel.getMsg().equals("%msjCkvjx08GH#mc0*mxvhvx4VHs13Nch!cnq-nss.uyCX7xvC")){
+                ((RecieverViewHolder) holder).img_layout2.setVisibility(View.GONE);
+                ((RecieverViewHolder) holder).image2.setVisibility(View.GONE);
+                ((RecieverViewHolder) holder).recieverMsg.setVisibility(View.GONE);
+                ((RecieverViewHolder) holder).location1.setVisibility(View.GONE);
+                ((RecieverViewHolder) holder).cont_lay2.setVisibility(View.VISIBLE);
+                ((RecieverViewHolder) holder).recievertime.setText(messageModel.getTime());
+
+                ((RecieverViewHolder) holder).disp_name2.setText(messageModel.getDisp_name());
+                ((RecieverViewHolder) holder).phone2.setText(messageModel.getNumber());
+
+                ((RecieverViewHolder) holder).add_btn2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent contactIntent = new Intent(ContactsContract.Intents.Insert. ACTION ) ;
+                        contactIntent.setType(ContactsContract.RawContacts. CONTENT_TYPE ) ;
+                        contactIntent
+                                .putExtra(ContactsContract.Intents.Insert. NAME , ((RecieverViewHolder) holder).disp_name2.getText().toString())
+                                .putExtra(ContactsContract.Intents.Insert. PHONE , ((RecieverViewHolder) holder).phone2.getText().toString()) ;
+                        context.startActivity(contactIntent);
+                    }
+                });
+            }
             else {
                 ((RecieverViewHolder) holder).recieverMsg.setVisibility(View.VISIBLE);
                 ((RecieverViewHolder) holder).location1.setVisibility(View.GONE);
+                ((RecieverViewHolder) holder).cont_lay2.setVisibility(View.GONE);
                 ((RecieverViewHolder) holder).img_layout2.setVisibility(View.GONE);
                 ((RecieverViewHolder) holder).recievertime.setText(messageModel.getTime());
                 ((RecieverViewHolder) holder).recieverMsg.setText(messageModel.getMsg());
@@ -158,9 +200,11 @@ public class ChatAdapter extends RecyclerView.Adapter {
     }
 
     public class RecieverViewHolder extends RecyclerView.ViewHolder {
-        TextView recieverMsg, recievertime;
+        TextView recieverMsg, recievertime,disp_name2,phone2,add_btn2;
         CardView img_layout2;
         ImageView image2,location1,screenshot1;
+        LinearLayout cont_lay2;
+
 
 
         public RecieverViewHolder(@NonNull View itemView) {
@@ -171,13 +215,18 @@ public class ChatAdapter extends RecyclerView.Adapter {
             image2 = itemView.findViewById(R.id.image2);
             location1= itemView.findViewById(R.id.mylocation2);
             screenshot1= itemView.findViewById(R.id.screenshot2);
+            disp_name2 = itemView.findViewById(R.id.display_name2);
+            phone2 = itemView.findViewById(R.id.phone_number2);
+            add_btn2 = itemView.findViewById(R.id.add_cont_btn2);
+            cont_lay2 = itemView.findViewById(R.id.contact_layout_rec);
         }
     }
 
     public class SenderViewHolder extends RecyclerView.ViewHolder {
-        TextView senderMsg, sendertime;
+        TextView senderMsg, sendertime,disp_name1,phone1,add_btn1;
         CardView img_layout;
         ImageView image1,location,screen_shot;
+        LinearLayout cont_lay1;
 
         public SenderViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -187,6 +236,10 @@ public class ChatAdapter extends RecyclerView.Adapter {
             image1 = itemView.findViewById(R.id.image);
             location = itemView.findViewById(R.id.mylocation);
             screen_shot = itemView.findViewById(R.id.screenshot);
+            disp_name1 = itemView.findViewById(R.id.display_name);
+            phone1 = itemView.findViewById(R.id.phone_number);
+            add_btn1 = itemView.findViewById(R.id.add_cont_btn);
+            cont_lay1 = itemView.findViewById(R.id.contact_layout);
         }
     }
 }

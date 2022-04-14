@@ -1,9 +1,10 @@
 package com.example.onlinechatapp.models;
 
 public class Message_Model {
-    String msg,userid,time,timestamp,imageUrl,lat,lon;
+    String msg,userid,time,timestamp,imageUrl,lat,lon,number,disp_name;
 
-    public Message_Model(String msg,String userid,String time,String timestamp,String imageUrl,String lat,String lon){
+    public Message_Model(String msg,String userid,String time,String timestamp,String imageUrl,String lat,String lon
+    ,String number,String disp_name){
         this.msg=msg;
         this.userid=userid;
         this.time=time;
@@ -11,6 +12,8 @@ public class Message_Model {
         this.imageUrl=imageUrl;
         this.lat=lat;
         this.lon=lon;
+        this.number=number;
+        this.disp_name=disp_name;
     }
 
     public Message_Model(String msg,String userid){
@@ -74,6 +77,22 @@ public class Message_Model {
 
     public void setLon(String lon) {
         this.lon = lon;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    public String getDisp_name() {
+        return disp_name;
+    }
+
+    public void setDisp_name(String disp_name) {
+        this.disp_name = disp_name;
     }
 }
 
