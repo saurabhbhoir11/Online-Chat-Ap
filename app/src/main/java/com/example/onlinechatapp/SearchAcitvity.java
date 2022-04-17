@@ -68,7 +68,7 @@ public class SearchAcitvity extends AppCompatActivity {
                             assert users != null;
                             assert firebaseUser != null;
 
-                            if (!users.getUserid().equal    s(firebaseUser.getUid())) {
+                            if (!users.getUserid().equals(firebaseUser.getUid())) {
                                 list.add(users);
                             }
                             SearchAdapter adapter = new SearchAdapter(list, SearchAcitvity.this);

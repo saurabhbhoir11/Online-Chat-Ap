@@ -25,6 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.onlinechatapp.ChatDetailActivity;
+import com.example.onlinechatapp.PhotoView;
 import com.example.onlinechatapp.R;
 import com.example.onlinechatapp.home;
 import com.example.onlinechatapp.models.Message_Model;
@@ -79,14 +80,14 @@ public class ChatAdapter extends RecyclerView.Adapter {
                 ((SenderViewHolder) holder).cont_lay1.setVisibility(View.GONE);
                 ((SenderViewHolder) holder).sendertime.setText(messageModel.getTime());
 
-                /*((SenderViewHolder) holder).image1.setOnClickListener(new View.OnClickListener() {
+                ((SenderViewHolder) holder).img_layout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(context, PhotoView.class);
                         intent.putExtra("image", messageModel.getImageUrl());
                         context.startActivity(intent);
                     }
-                });*/
+                });
             } else if (messageModel.getMsg().equals("$2y$10$4S0nmurvLkIkLbjnUZMrOu/IWViv87UzRB2v5hcBVzbGDUkw.3D..")) {
 
             } else if (messageModel.getMsg().equals("$ncw$&nwcbwcwjdd!@cnwkcScwxj#5cjwc9qw8dw5cn")) {
@@ -161,6 +162,15 @@ public class ChatAdapter extends RecyclerView.Adapter {
                 ((RecieverViewHolder) holder).recieverMsg.setVisibility(View.GONE);
                 ((RecieverViewHolder) holder).location1.setVisibility(View.GONE);
                 ((RecieverViewHolder) holder).recievertime.setText(messageModel.getTime());
+                ((RecieverViewHolder) holder).img_layout2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(context, PhotoView.class);
+                        intent.putExtra("image", messageModel.getImageUrl());
+                        context.startActivity(intent);
+                    }
+                });
+
             } else if (messageModel.getMsg().equals("$ncw$&nwcbwcwjdd!@cnwkcScwxj#5cjwc9qw8dw5cn")) {
                 ((RecieverViewHolder) holder).img_layout2.setVisibility(View.GONE);
                 ((RecieverViewHolder) holder).image2.setVisibility(View.GONE);
