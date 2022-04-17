@@ -3,8 +3,10 @@ package com.example.onlinechatapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -13,6 +15,11 @@ import com.example.onlinechatapp.Adapter.ParticipantAdapter;
 import com.example.onlinechatapp.databinding.ActivityParticipantBinding;
 import com.example.onlinechatapp.models.Users;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,12 +32,14 @@ public class ParticipantActivity extends AppCompatActivity {
     ArrayList<Users> list = new ArrayList<>();
     private List<String> allList;
     ParticipantAdapter adapter;
+    FirebaseFirestore firestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         binding = ActivityParticipantBinding.inflate(getLayoutInflater());
         getSupportActionBar().hide();
         auth = FirebaseAuth.getInstance();
+        firestore = FirebaseFirestore.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(binding.getRoot());
         allList = new ArrayList<>();
@@ -38,55 +47,48 @@ public class ParticipantActivity extends AppCompatActivity {
         loadGroupInfo();
         getParticipants();
 
-        if(grprole.equals("participant")){
+        if (grprole.equals("participant")) {
             binding.floatingActionButton3.setVisibility(View.GONE);
-        }
-        else {
+        } else {
             binding.floatingActionButton3.setVisibility(View.VISIBLE);
         }
 
         adapter = new ParticipantAdapter(list, ParticipantActivity.this, groupId, grprole);
-       // binding.recyclerView.setAdapter(adapter);
+        binding.recyclerView.setAdapter(adapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        //binding.recyclerView.setLayoutManager(layoutManager);
+        binding.recyclerView.setLayoutManager(layoutManager);
 
         binding.floatingActionButton3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*Intent intent = new Intent(ParticipantActivity.this, AddParticipantActivity.class);
+                Intent intent = new Intent(ParticipantActivity.this, AddParticipantActivity.class);
                 intent.putExtra("groupId", groupId);
-                startActivity(intent);*/
+                startActivity(intent);
             }
         });
     }
 
     private void getParticipants() {
-        /*DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("groups").child(groupId);
-        ref.child("Participants").addListenerForSingleValueEvent(new ValueEventListener() {
+        Toast.makeText(this, ""+groupId, Toast.LENGTH_SHORT).show();
+        firestore.collection("groups").document(groupId).collection("Participants").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 allList.clear();
-                for (DataSnapshot snapshot1 : snapshot.getChildren()) {
-                    allList.add(snapshot1.getKey());
+                for (DocumentSnapshot snapshot1 : value.getDocuments()) {
+                    allList.add(snapshot1.getId());
                 }
                 showUsers();
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });*/
+        });
     }
 
     private void showUsers() {
-        /*DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Users");
-        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+        firestore.collection("Users").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 list.clear();
-                for (DataSnapshot snapshot1 : snapshot.getChildren()) {
-                    Users users = snapshot1.getValue(Users.class);
+                for (DocumentSnapshot snapshot : value.getDocuments()) {
+                    Users users = snapshot.toObject(Users.class);
                     for (String id : allList) {
                         if (users.getUserid().equals(id)) {
                             list.add(users);
@@ -95,12 +97,7 @@ public class ParticipantActivity extends AppCompatActivity {
                 }
                 adapter.notifyDataSetChanged();
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });*/
+        });
     }
 
     private void loadGroupInfo() {

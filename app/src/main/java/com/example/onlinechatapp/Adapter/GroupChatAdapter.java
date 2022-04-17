@@ -11,8 +11,10 @@ import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -21,7 +23,10 @@ import com.example.onlinechatapp.Video;
 import com.example.onlinechatapp.R;
 import com.example.onlinechatapp.models.GroupChat;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 
 import java.text.Collator;
 import java.util.ArrayList;
@@ -34,12 +39,14 @@ public class GroupChatAdapter extends RecyclerView.Adapter{
     int System_view_type = 3;
     int system=0;
     FirebaseAuth auth;
+    FirebaseFirestore firestore;
 
     public GroupChatAdapter(ArrayList<GroupChat> GroupChatModel, Context context) {
         this.GroupChatModel = GroupChatModel;
         this.context = context;
 
         auth=FirebaseAuth.getInstance();
+        firestore=FirebaseFirestore.getInstance();
     }
     @Override
     public int getItemViewType(int position) {
@@ -70,12 +77,6 @@ public class GroupChatAdapter extends RecyclerView.Adapter{
                 Glide.with(context).load(grpmodel.getImageUrl()).into(((SenderViewHolder) holder).photo);
                 ((SenderViewHolder) holder).photo.setVisibility(View.VISIBLE);
                 ((SenderViewHolder) holder).senderMsg.setVisibility(View.GONE);
-                ((SenderViewHolder) holder).audio.setVisibility(View.GONE);
-                ((SenderViewHolder) holder).constraint.setVisibility(View.GONE);
-                ((SenderViewHolder) holder).play.setVisibility(View.GONE);
-                ((SenderViewHolder) holder).thumbanail.setVisibility(View.GONE);
-                ((SenderViewHolder) holder).senderlay.setVisibility(View.VISIBLE);
-                ((SenderViewHolder) holder).sticker.setVisibility(View.GONE);
                 ((SenderViewHolder) holder).photo.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -86,42 +87,21 @@ public class GroupChatAdapter extends RecyclerView.Adapter{
                 });
             }
             else if (grpmodel.getMsg().equals("*Video*")) {
-                ((SenderViewHolder) holder).play.setVisibility(View.VISIBLE);
                 ((SenderViewHolder) holder).senderMsg.setVisibility(View.GONE);
                 ((SenderViewHolder) holder).photo.setVisibility(View.GONE);
-                ((SenderViewHolder) holder).audio.setVisibility(View.GONE);
-                ((SenderViewHolder) holder).thumbanail.setVisibility(View.VISIBLE);
-                ((SenderViewHolder) holder).constraint.setVisibility(View.GONE);
-                ((SenderViewHolder) holder).senderlay.setVisibility(View.VISIBLE);
-                ((SenderViewHolder) holder).sticker.setVisibility(View.GONE);
                 MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
                 mediaMetadataRetriever.setDataSource(grpmodel.getVideoUrl());
                 Bitmap bmFrame = mediaMetadataRetriever.getFrameAtTime(500000); //unit in microsecond
-                ((SenderViewHolder) holder).thumbanail.setImageBitmap(bmFrame);
+               // ((SenderViewHolder) holder).thumbanail.setImageBitmap(bmFrame);
 
-                ((SenderViewHolder) holder).play.setOnClickListener(new View.OnClickListener() {
+                /*((SenderViewHolder) holder).play.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Intent vid = new Intent(context, Video.class);
                         vid.putExtra("video", grpmodel.getVideoUrl());
                         context.startActivity(vid);
                     }
-                });
-            }
-            else if (grpmodel.getMsg().equals("*Audio*")) {
-                ((SenderViewHolder) holder).play.setVisibility(View.GONE);
-                ((SenderViewHolder) holder).senderMsg.setVisibility(View.GONE);
-                ((SenderViewHolder) holder).photo.setVisibility(View.GONE);
-                ((SenderViewHolder) holder).thumbanail.setVisibility(View.GONE);
-                ((SenderViewHolder) holder).constraint.setVisibility(View.GONE);
-                ((SenderViewHolder) holder).audio.setVisibility(View.VISIBLE);
-                ((SenderViewHolder) holder).senderlay.setVisibility(View.VISIBLE);
-                ((SenderViewHolder) holder).sticker.setVisibility(View.GONE);
-            }
-            else if (grpmodel.getMsg().equals("*GIF*")) {
-                ((SenderViewHolder) holder).gif.setVisibility(View.VISIBLE);
-                ((SenderViewHolder) holder).gif.loadUrl(grpmodel.getWebUrl());
-                ((SenderViewHolder) holder).senderlay.setVisibility(View.VISIBLE);
+                });*/
             }
             else {
                 ((SenderViewHolder) holder).photo.setVisibility(View.GONE);
@@ -134,12 +114,18 @@ public class GroupChatAdapter extends RecyclerView.Adapter{
         }
 
         else{
+           firestore.collection("Users").document(grpmodel.getSender()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+               @Override
+               public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                   ((RecieverViewHolder) holder).sendname.setText(String.valueOf(value.get("username")));
+                   Glide.with(context).load(""+value.get("profilepic")).into(((RecieverViewHolder) holder).send_prof);
+               }
+           });
+
             if(grpmodel.getMsg().equals("*Photo*")) {
                 Glide.with(context).load(grpmodel.getImageUrl()).into(((RecieverViewHolder) holder).photos);
                 ((RecieverViewHolder) holder).photos.setVisibility(View.VISIBLE);
                 ((RecieverViewHolder) holder).recieverMsg.setVisibility(View.GONE);
-                ((RecieverViewHolder) holder).play2.setVisibility(View.GONE);
-                ((RecieverViewHolder) holder).thumbnail2.setVisibility(View.GONE);
                 ((RecieverViewHolder) holder).photos.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -151,33 +137,13 @@ public class GroupChatAdapter extends RecyclerView.Adapter{
             }
 
             else if(grpmodel.getMsg().equals("*Video*")){
-                ((RecieverViewHolder) holder).play2.setVisibility(View.VISIBLE);
-                ((RecieverViewHolder) holder).recieverMsg.setVisibility(View.GONE);
-                ((RecieverViewHolder) holder).photos.setVisibility(View.GONE);
-                ((RecieverViewHolder) holder).recsticker.setVisibility(View.GONE);
-                ((RecieverViewHolder) holder).thumbnail2.setVisibility(View.VISIBLE);
-                MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
-                mediaMetadataRetriever.setDataSource(grpmodel.getVideoUrl());
-                Bitmap bmFrame = mediaMetadataRetriever.getFrameAtTime(500000); //unit in microsecond
-                ((RecieverViewHolder) holder).thumbnail2.setImageBitmap(bmFrame);
 
-                ((RecieverViewHolder) holder).play2.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent vid = new Intent(context, Video.class);
-                        vid.putExtra("video",grpmodel.getVideoUrl());
-                        context.startActivity(vid);
-                    }
-                });
             }
             else
             {
                 ((RecieverViewHolder) holder).photos.setVisibility(View.GONE);
-                ((RecieverViewHolder) holder).recsticker.setVisibility(View.GONE);
                 ((RecieverViewHolder) holder).recieverMsg.setVisibility(View.VISIBLE);
-                ((RecieverViewHolder) holder).reclayout.setVisibility(View.VISIBLE);
-                ((RecieverViewHolder) holder).play2.setVisibility(View.GONE);
-                ((RecieverViewHolder) holder).thumbnail2.setVisibility(View.GONE);
+              //  ((RecieverViewHolder) holder).reclayout.setVisibility(View.VISIBLE);
             }
             //((RecieverViewHolder)holder).recievertime.setText(grpmodel.getTime());
             ((RecieverViewHolder) holder).recieverMsg.setText(grpmodel.getMsg());
@@ -193,24 +159,20 @@ public class GroupChatAdapter extends RecyclerView.Adapter{
 
     public class RecieverViewHolder extends RecyclerView.ViewHolder {
         TextView recieverMsg, recievertime,sendname;
-        ImageView photos, recsticker,play2, thumbnail2,send_prof;
-        View reclayout;
+        ImageView photos,send_prof;
         public RecieverViewHolder(@NonNull View itemView) {
             super(itemView);
             recieverMsg = itemView.findViewById(R.id.rec_msg2);
             recievertime = itemView.findViewById(R.id.rec_time2);
             photos= itemView.findViewById(R.id.grp_img);
-            //reclayout=itemView.findViewById(R.id.reclayout);
             sendname=itemView.findViewById(R.id.sender_name);
-            send_prof=itemView.findViewById(R.id.sender_profile);
+            send_prof=itemView.findViewById(R.id.sender_prof);
         }
     }
 
     public class SenderViewHolder extends RecyclerView.ViewHolder {
         TextView senderMsg, sendertime;
-        ImageView photo, sticker,play, thumbanail;
-        View constraint, senderlay,audio;
-        WebView gif;
+        ImageView photo;
         public SenderViewHolder(@NonNull View itemView) {
             super(itemView);
             senderMsg = itemView.findViewById(R.id.Sender_Text);

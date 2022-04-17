@@ -17,10 +17,12 @@ import com.example.onlinechatapp.ChatDetailActivity;
 import com.example.onlinechatapp.OtherUserProfile;
 import com.example.onlinechatapp.R;
 import com.example.onlinechatapp.models.Users;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
@@ -47,6 +49,28 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.viewholder> 
     public void onBindViewHolder(@NonNull InboxAdapter.viewholder holder, int position) {
         Users users = list.get(position);
         firestore=FirebaseFirestore.getInstance();
+
+        firestore.collection("chats").document(FirebaseAuth.getInstance().getUid() + users.getUserid())
+                .collection(FirebaseAuth.getInstance().getUid() + users.getUserid()).orderBy("timestamp").limitToLast(1).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                    for(DocumentSnapshot snapshot: value.getDocuments()){
+                        if(snapshot.get("msg").toString().equals("$2y$10$39cSefzbHNYvvwTmQpmN2OTZ7jfX.vWd7QeSqgs9pRRWKU7zF7txm")){
+                            holder.LastMsg.setText("\uD83D\uDCF7 Photo");
+                        }
+                        else if(snapshot.get("msg").toString().equals("$ncw$&nwcbwcwjdd!@cnwkcScwxj#5cjwc9qw8dw5cn")){
+                            holder.LastMsg.setText("\uD83D\uDCCD Location");
+                        }
+                        else if(snapshot.get("msg").toString().equals("%msjCkvjx08GH#mc0*mxvhvx4VHs13Nch!cnq-nss.uyCX7xvC")){
+                            holder.LastMsg.setText("\uD83D\uDCDE Contact");
+                        }
+                        else {
+                            holder.LastMsg.setText(snapshot.get("msg").toString());
+                        }
+                        holder.time.setText(snapshot.get("time").toString());
+                }
+            }
+        });
 
         firestore.collection("Users").document(users.getUserid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override

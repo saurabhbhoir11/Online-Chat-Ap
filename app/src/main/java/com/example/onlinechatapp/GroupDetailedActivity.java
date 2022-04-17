@@ -95,7 +95,9 @@ public class GroupDetailedActivity extends AppCompatActivity {
         binding.linearTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(GroupDetailedActivity.this, ParticipantActivity.class));
+                Intent intent1=new Intent(GroupDetailedActivity.this, ParticipantActivity.class);
+                intent1.putExtra("groupId",groupId);
+                startActivity(intent1);
 
             }
         });

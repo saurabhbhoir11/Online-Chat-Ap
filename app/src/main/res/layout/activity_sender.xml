@@ -100,7 +100,7 @@
                 android:maxWidth="200dp"
                 android:minWidth="180dp"
                 android:padding="3dp"
-                android:text="Add To Contacts"
+                android:text="View"
                 android:textColor="#1E88E5"
                 android:textSize="16sp"
                 android:textStyle="bold" />

@@ -241,14 +241,24 @@ public class ChatDetailActivity extends AppCompatActivity implements ScreenshotD
             startActivityForResult(video, 30);
         }
         else if(index==2){
-            Intent pickContact = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
-            pickContact.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
-            startActivityForResult(pickContact, 40);
+            if(checkContactPermissions()){
+                Intent pickContact = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                pickContact.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
+                startActivityForResult(pickContact, 40);
+            }
+            else{
+                ActivityCompat.requestPermissions(ChatDetailActivity.this, new String[]{
+                        Manifest.permission.READ_CONTACTS}, 300);
+            }
         }
         else if (index == 4) {
             mFusedLocationClient = LocationServices.getFusedLocationProviderClient(ChatDetailActivity.this);
             getCurrentLocation();
         }
+    }
+
+    private boolean checkContactPermissions() {
+        return ActivityCompat.checkSelfPermission(ChatDetailActivity.this, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED;
     }
 
 

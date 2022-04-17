@@ -23,8 +23,6 @@ public class Login extends AppCompatActivity {
         setContentView(binding.getRoot());
         auth=FirebaseAuth.getInstance();
 
-
-
         if (auth.getCurrentUser() != null) {
 
             if(!auth.getCurrentUser().isEmailVerified()&&auth.getCurrentUser().getPhoneNumber()==null) {

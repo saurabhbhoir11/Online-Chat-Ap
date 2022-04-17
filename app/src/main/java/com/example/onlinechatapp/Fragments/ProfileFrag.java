@@ -24,6 +24,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -49,10 +50,17 @@ public class ProfileFrag extends Fragment {
         firestore=FirebaseFirestore.getInstance();
         auth=FirebaseAuth.getInstance();
 
+        firestore.collection("friends").document(auth.getCurrentUser().getUid()).collection("userid").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                binding.userFollowers.setText(String.valueOf(value.size()));
+            }
+        });
+
         firestore.collection("Users").document(auth.getCurrentUser().getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                Glide.with(getContext()).load(value.get("profilepic")).centerCrop().placeholder(R.drawable.user).into(binding.profileImage);
+                Glide.with(getContext()).load(""+value.get("profilepic")).centerCrop().placeholder(R.drawable.user).into(binding.profileImage);
                 binding.profileName.setText(""+value.get("username"));
 
                 binding.editProf.setOnClickListener(new View.OnClickListener() {

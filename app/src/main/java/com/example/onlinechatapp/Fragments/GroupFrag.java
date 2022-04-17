@@ -76,6 +76,7 @@ public class GroupFrag extends Fragment {
                                     groupAdapter = new GroupAdapter(getContext(), GroupList);
                                     binding.grpList.setAdapter(groupAdapter);
                                     groupAdapter.notifyDataSetChanged();
+                                    break;
                                 }
                             }
                         }

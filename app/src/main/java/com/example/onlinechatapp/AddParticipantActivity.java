@@ -1,16 +1,17 @@
 package com.example.onlinechatapp;
 
-import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.widget.Toast;
-
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+
+import com.example.onlinechatapp.Adapter.AddPartiAdapter;
 import com.example.onlinechatapp.Adapter.SearchAdapter;
-import com.example.onlinechatapp.databinding.ActivitySearchAcitvityBinding;
+import com.example.onlinechatapp.databinding.ActivityAddParticipantBinding;
 import com.example.onlinechatapp.models.Users;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -20,43 +21,44 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.auth.User;
 
 import java.util.ArrayList;
 
-public class SearchAcitvity extends AppCompatActivity {
-
-    ActivitySearchAcitvityBinding binding;
-    FirebaseFirestore mUserDatabase;
+public class AddParticipantActivity extends AppCompatActivity {
+    ActivityAddParticipantBinding binding;
+    FirebaseFirestore database;
+    String groupId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        binding = ActivitySearchAcitvityBinding.inflate(getLayoutInflater());
+        binding = ActivityAddParticipantBinding.inflate(getLayoutInflater());
+        groupId = getIntent().getStringExtra("groupId");
         super.onCreate(savedInstanceState);
         setContentView(binding.getRoot());
         getSupportActionBar().hide();
         ArrayList<Users> list = new ArrayList<>();
 
-        mUserDatabase = FirebaseFirestore.getInstance();
+        database = FirebaseFirestore.getInstance();
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(SearchAcitvity.this);
-        binding.availableusers.setLayoutManager(layoutManager);
-        SearchAdapter adapter = new SearchAdapter(list, SearchAcitvity.this);
-        binding.availableusers.setAdapter(adapter);
-        binding.searchname.addTextChangedListener(new TextWatcher() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(AddParticipantActivity.this);
+        binding.addParti.setLayoutManager(layoutManager);
+        AddPartiAdapter adapter = new AddPartiAdapter(list, AddParticipantActivity.this, groupId);
+        binding.addParti.setAdapter(adapter);
+
+        binding.seacrhppl.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                searchUsers(s.toString());
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                searchUsers(charSequence.toString());
             }
 
             private void searchUsers(String s) {
                 FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                Query query = mUserDatabase.collection("Users").orderBy("username").startAt(s).endAt(s + "\uf8ff");
+                Query query = database.collection("Users").orderBy("username").startAt(s).endAt(s + "\uf8ff");
                 query.addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
@@ -68,38 +70,44 @@ public class SearchAcitvity extends AppCompatActivity {
                             assert users != null;
                             assert firebaseUser != null;
 
-                            if (!users.getUserid().equal    s(firebaseUser.getUid())) {
+                            if (!users.getUserid().equals(firebaseUser.getUid())) {
                                 list.add(users);
                             }
-                            SearchAdapter adapter = new SearchAdapter(list, SearchAcitvity.this);
-                            binding.availableusers.setAdapter(adapter);
                         }
-
+                        adapter.notifyDataSetChanged();
                     }
                 });
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
+            public void afterTextChanged(Editable editable) {
 
             }
         });
 
-        mUserDatabase.collection("Users").addSnapshotListener(new EventListener<QuerySnapshot>() {
+        database.collection("Users").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
                 list.clear();
-                assert value != null;
-                for (DocumentSnapshot value2 : value.getDocuments()) {
-                    Users users = value2.toObject(Users.class);
-                    users.setUserid(value2.get("userid").toString());
+                for (DocumentSnapshot dataSnapshot : value.getDocuments()) {
+                    Users users = dataSnapshot.toObject(Users.class);
+                    users.setUserid(dataSnapshot.getId());
                     if (!users.getUserid().equals(FirebaseAuth.getInstance().getUid())) {
                         list.add(users);
                     }
+
                 }
                 adapter.notifyDataSetChanged();
             }
         });
+
+        return;
     }
 
+    @Override
+    public void onBackPressed() {
+        finish();
+        super.onBackPressed();
+
+    }
 }

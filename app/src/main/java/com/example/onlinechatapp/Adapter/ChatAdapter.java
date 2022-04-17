@@ -2,19 +2,16 @@ package com.example.onlinechatapp.Adapter;
 
 
 import android.Manifest;
-import android.app.AlertDialog;
+import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.media.MediaMetadataRetriever;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -22,14 +19,16 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.onlinechatapp.ChatDetailActivity;
 import com.example.onlinechatapp.R;
+import com.example.onlinechatapp.home;
 import com.example.onlinechatapp.models.Message_Model;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
 
@@ -38,7 +37,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
     private Context context;
     int receiver_View_Type = 1;
     int sender_View_Type = 2;
-    String API_KEY="";
+    String API_KEY = "";
 
 
     public ChatAdapter(ArrayList<Message_Model> messageModel, Context context) {
@@ -88,11 +87,9 @@ public class ChatAdapter extends RecyclerView.Adapter {
                         context.startActivity(intent);
                     }
                 });*/
-            }
-            else if(messageModel.getMsg().equals("$2y$10$4S0nmurvLkIkLbjnUZMrOu/IWViv87UzRB2v5hcBVzbGDUkw.3D..")){
+            } else if (messageModel.getMsg().equals("$2y$10$4S0nmurvLkIkLbjnUZMrOu/IWViv87UzRB2v5hcBVzbGDUkw.3D..")) {
 
-            }
-            else if(messageModel.getMsg().equals("$ncw$&nwcbwcwjdd!@cnwkcScwxj#5cjwc9qw8dw5cn")){
+            } else if (messageModel.getMsg().equals("$ncw$&nwcbwcwjdd!@cnwkcScwxj#5cjwc9qw8dw5cn")) {
                 ((SenderViewHolder) holder).img_layout.setVisibility(View.GONE);
                 ((SenderViewHolder) holder).image1.setVisibility(View.GONE);
                 ((SenderViewHolder) holder).senderMsg.setVisibility(View.GONE);
@@ -100,7 +97,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
                 ((SenderViewHolder) holder).location.setVisibility(View.VISIBLE);
                 ((SenderViewHolder) holder).sendertime.setText(messageModel.getTime());
 
-                String url="https://maps.googleapis.com/maps/api/staticmap?center="+messageModel.getLat()+","+messageModel.getLon()+"&zoom=14&size=400x400&key=AIzaSyDRSh_tZk6KOKnk5-OJgsw_7yhCJ9kj4jE";
+                String url = "https://maps.googleapis.com/maps/api/staticmap?center=" + messageModel.getLat() + "," + messageModel.getLon() + "&zoom=16&size=400x400&key=AIzaSyDRSh_tZk6KOKnk5-OJgsw_7yhCJ9kj4jE";
                 Glide.with(context).load(url).into(((SenderViewHolder) holder).location);
                 ((SenderViewHolder) holder).location.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -111,8 +108,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
                     }
                 });
 
-            }
-            else if(messageModel.getMsg().equals("%msjCkvjx08GH#mc0*mxvhvx4VHs13Nch!cnq-nss.uyCX7xvC")){
+            } else if (messageModel.getMsg().equals("%msjCkvjx08GH#mc0*mxvhvx4VHs13Nch!cnq-nss.uyCX7xvC")) {
                 ((SenderViewHolder) holder).img_layout.setVisibility(View.GONE);
                 ((SenderViewHolder) holder).image1.setVisibility(View.GONE);
                 ((SenderViewHolder) holder).senderMsg.setVisibility(View.GONE);
@@ -122,8 +118,32 @@ public class ChatAdapter extends RecyclerView.Adapter {
                 ((SenderViewHolder) holder).disp_name1.setText(messageModel.getDisp_name());
                 ((SenderViewHolder) holder).phone1.setText(messageModel.getNumber());
                 ((SenderViewHolder) holder).sendertime.setText(messageModel.getTime());
-            }
-            else {
+
+                ((SenderViewHolder) holder).add_btn1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+
+                            Uri uri = Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode(((SenderViewHolder) holder).phone1.getText().toString()));
+                            String[] projection = new String[]{ContactsContract.PhoneLookup._ID};
+
+                            Cursor cur = context.getApplicationContext().getContentResolver().query(uri, projection, null, null, null);
+
+                            if (cur != null && cur.moveToNext()) {
+                                Long id = cur.getLong(0);
+
+                                Intent intent = new Intent(Intent.ACTION_VIEW);
+                                Uri contactUri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_URI, String.valueOf(id));
+                                intent.setData(contactUri);
+                                context.startActivity(intent);
+
+                                cur.close();
+                            }
+                        }
+                    }
+                });
+            } else {
                 ((SenderViewHolder) holder).img_layout.setVisibility(View.GONE);
                 ((SenderViewHolder) holder).senderMsg.setVisibility(View.VISIBLE);
                 ((SenderViewHolder) holder).location.setVisibility(View.GONE);
@@ -141,15 +161,14 @@ public class ChatAdapter extends RecyclerView.Adapter {
                 ((RecieverViewHolder) holder).recieverMsg.setVisibility(View.GONE);
                 ((RecieverViewHolder) holder).location1.setVisibility(View.GONE);
                 ((RecieverViewHolder) holder).recievertime.setText(messageModel.getTime());
-            }
-            else if(messageModel.getMsg().equals("$ncw$&nwcbwcwjdd!@cnwkcScwxj#5cjwc9qw8dw5cn")){
+            } else if (messageModel.getMsg().equals("$ncw$&nwcbwcwjdd!@cnwkcScwxj#5cjwc9qw8dw5cn")) {
                 ((RecieverViewHolder) holder).img_layout2.setVisibility(View.GONE);
                 ((RecieverViewHolder) holder).image2.setVisibility(View.GONE);
                 ((RecieverViewHolder) holder).cont_lay2.setVisibility(View.GONE);
                 ((RecieverViewHolder) holder).recieverMsg.setVisibility(View.GONE);
                 ((RecieverViewHolder) holder).location1.setVisibility(View.VISIBLE);
                 ((RecieverViewHolder) holder).recievertime.setText(messageModel.getTime());
-                String url="https://maps.googleapis.com/maps/api/staticmap?center="+messageModel.getLat()+","+messageModel.getLon()+"&zoom=14&size=400x400&key=AIzaSyDRSh_tZk6KOKnk5-OJgsw_7yhCJ9kj4jE";
+                String url = "https://maps.googleapis.com/maps/api/staticmap?center=" + messageModel.getLat() + "," + messageModel.getLon() + "&zoom=16&size=400x400&key=AIzaSyDRSh_tZk6KOKnk5-OJgsw_7yhCJ9kj4jE";
                 Glide.with(context).load(url).into(((RecieverViewHolder) holder).location1);
                 ((RecieverViewHolder) holder).location1.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -159,8 +178,7 @@ public class ChatAdapter extends RecyclerView.Adapter {
                         context.startActivity(intent);
                     }
                 });
-            }
-            else if(messageModel.getMsg().equals("%msjCkvjx08GH#mc0*mxvhvx4VHs13Nch!cnq-nss.uyCX7xvC")){
+            } else if (messageModel.getMsg().equals("%msjCkvjx08GH#mc0*mxvhvx4VHs13Nch!cnq-nss.uyCX7xvC")) {
                 ((RecieverViewHolder) holder).img_layout2.setVisibility(View.GONE);
                 ((RecieverViewHolder) holder).image2.setVisibility(View.GONE);
                 ((RecieverViewHolder) holder).recieverMsg.setVisibility(View.GONE);
@@ -174,16 +192,15 @@ public class ChatAdapter extends RecyclerView.Adapter {
                 ((RecieverViewHolder) holder).add_btn2.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent contactIntent = new Intent(ContactsContract.Intents.Insert. ACTION ) ;
-                        contactIntent.setType(ContactsContract.RawContacts. CONTENT_TYPE ) ;
+                        Intent contactIntent = new Intent(ContactsContract.Intents.Insert.ACTION);
+                        contactIntent.setType(ContactsContract.RawContacts.CONTENT_TYPE);
                         contactIntent
-                                .putExtra(ContactsContract.Intents.Insert. NAME , ((RecieverViewHolder) holder).disp_name2.getText().toString())
-                                .putExtra(ContactsContract.Intents.Insert. PHONE , ((RecieverViewHolder) holder).phone2.getText().toString()) ;
+                                .putExtra(ContactsContract.Intents.Insert.NAME, ((RecieverViewHolder) holder).disp_name2.getText().toString())
+                                .putExtra(ContactsContract.Intents.Insert.PHONE, ((RecieverViewHolder) holder).phone2.getText().toString());
                         context.startActivity(contactIntent);
                     }
                 });
-            }
-            else {
+            } else {
                 ((RecieverViewHolder) holder).recieverMsg.setVisibility(View.VISIBLE);
                 ((RecieverViewHolder) holder).location1.setVisibility(View.GONE);
                 ((RecieverViewHolder) holder).cont_lay2.setVisibility(View.GONE);
@@ -200,21 +217,20 @@ public class ChatAdapter extends RecyclerView.Adapter {
     }
 
     public class RecieverViewHolder extends RecyclerView.ViewHolder {
-        TextView recieverMsg, recievertime,disp_name2,phone2,add_btn2;
+        TextView recieverMsg, recievertime, disp_name2, phone2, add_btn2;
         CardView img_layout2;
-        ImageView image2,location1,screenshot1;
+        ImageView image2, location1, screenshot1;
         LinearLayout cont_lay2;
-
 
 
         public RecieverViewHolder(@NonNull View itemView) {
             super(itemView);
             recieverMsg = itemView.findViewById(R.id.rec_msg);
             recievertime = itemView.findViewById(R.id.rec_time);
-            img_layout2= itemView.findViewById(R.id.image_card2);
+            img_layout2 = itemView.findViewById(R.id.image_card2);
             image2 = itemView.findViewById(R.id.image2);
-            location1= itemView.findViewById(R.id.mylocation2);
-            screenshot1= itemView.findViewById(R.id.screenshot2);
+            location1 = itemView.findViewById(R.id.mylocation2);
+            screenshot1 = itemView.findViewById(R.id.screenshot2);
             disp_name2 = itemView.findViewById(R.id.display_name2);
             phone2 = itemView.findViewById(R.id.phone_number2);
             add_btn2 = itemView.findViewById(R.id.add_cont_btn2);
@@ -223,16 +239,16 @@ public class ChatAdapter extends RecyclerView.Adapter {
     }
 
     public class SenderViewHolder extends RecyclerView.ViewHolder {
-        TextView senderMsg, sendertime,disp_name1,phone1,add_btn1;
+        TextView senderMsg, sendertime, disp_name1, phone1, add_btn1;
         CardView img_layout;
-        ImageView image1,location,screen_shot;
+        ImageView image1, location, screen_shot;
         LinearLayout cont_lay1;
 
         public SenderViewHolder(@NonNull View itemView) {
             super(itemView);
             senderMsg = itemView.findViewById(R.id.send_msg);
             sendertime = itemView.findViewById(R.id.send_time);
-            img_layout= itemView.findViewById(R.id.image_card);
+            img_layout = itemView.findViewById(R.id.image_card);
             image1 = itemView.findViewById(R.id.image);
             location = itemView.findViewById(R.id.mylocation);
             screen_shot = itemView.findViewById(R.id.screenshot);
