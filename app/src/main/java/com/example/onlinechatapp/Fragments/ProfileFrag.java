@@ -62,6 +62,7 @@ public class ProfileFrag extends Fragment {
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                 Glide.with(getContext()).load(""+value.get("profilepic")).centerCrop().placeholder(R.drawable.user).into(binding.profileImage);
                 binding.profileName.setText(""+value.get("username"));
+                binding.userBio.setText(""+value.get("Bio"));
 
                 binding.editProf.setOnClickListener(new View.OnClickListener() {
                     @Override

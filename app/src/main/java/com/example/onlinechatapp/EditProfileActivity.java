@@ -53,7 +53,7 @@ public class EditProfileActivity extends AppCompatActivity {
             binding.date.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(binding.editDob.getText().toString()!=null){
+                    if(!binding.editDob.getText().toString().equals("")){
                         binding.date.setClickable(false);
                         Toast.makeText(EditProfileActivity.this, "You cannot change DOB", Toast.LENGTH_SHORT).show();
                     }
