@@ -45,6 +45,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.ramotion.circlemenu.CircleMenuView;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -64,7 +66,7 @@ public class ChatDetailActivity extends AppCompatActivity implements ScreenshotD
     String SenderRoom, ReceiverRoom;
     FusedLocationProviderClient mFusedLocationClient;
 
-    int screenshot=0;
+    int screenshot = 0;
 
     String myusername;
     private static final int PERMISSION_ID = 40;
@@ -86,6 +88,18 @@ public class ChatDetailActivity extends AppCompatActivity implements ScreenshotD
         getSupportActionBar().hide();
 
         checkReadExternalStoragePermission();
+
+        URL serverUrl;
+
+        /*try {
+            serverUrl = new URL("https://meet.jit.si");
+            JitsiMeetConferenceOptions defaultoptions = new JitsiMeetConferenceOptions.Builder().setServerURL(serverUrl)
+                    .setWelcomePageEnabled(false).build();
+            JitsiMeet.setDefaultConferenceOptions(defaultoptions);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }*/
+
 
         senderId = auth.getCurrentUser().getUid();
         receiverId = getIntent().getStringExtra("userId");
@@ -110,6 +124,20 @@ public class ChatDetailActivity extends AppCompatActivity implements ScreenshotD
 
         binding.fUsername.setText(username);
         Glide.with(this).load(profile_pic).override(70, 70).placeholder(R.drawable.user).into(binding.dP);
+
+
+        binding.audioCall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /*JitsiMeetConferenceOptions options = new JitsiMeetConferenceOptions.Builder()
+                        .setRoom(randomString)
+                        .setWelcomePageEnabled(false)
+                        .setAudioMuted(false)
+                        .setVideoMuted(true)
+                        .build();
+                JitsiMeetActivity.launch(VideoCallHost.this, options);*/
+            }
+        });
 
 
         binding.menuOps.setOnClickListener(new View.OnClickListener() {
@@ -226,7 +254,6 @@ public class ChatDetailActivity extends AppCompatActivity implements ScreenshotD
     }
 
 
-
     private void buttonClicked(int index) {
         Toast.makeText(this, "Clicked" + index, Toast.LENGTH_SHORT).show();
         if (index == 0) {
@@ -239,19 +266,16 @@ public class ChatDetailActivity extends AppCompatActivity implements ScreenshotD
             video.setAction(Intent.ACTION_GET_CONTENT);
             video.setType("video/*");
             startActivityForResult(video, 30);
-        }
-        else if(index==2){
-            if(checkContactPermissions()){
+        } else if (index == 2) {
+            if (checkContactPermissions()) {
                 Intent pickContact = new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
                 pickContact.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
                 startActivityForResult(pickContact, 40);
-            }
-            else{
+            } else {
                 ActivityCompat.requestPermissions(ChatDetailActivity.this, new String[]{
                         Manifest.permission.READ_CONTACTS}, 300);
             }
-        }
-        else if (index == 4) {
+        } else if (index == 4) {
             mFusedLocationClient = LocationServices.getFusedLocationProviderClient(ChatDetailActivity.this);
             getCurrentLocation();
         }
@@ -353,7 +377,7 @@ public class ChatDetailActivity extends AppCompatActivity implements ScreenshotD
             case REQUEST_CODE_READ_EXTERNAL_STORAGE_PERMISSION:
                 if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
                     Toast.makeText(this, "Please give access to External Storage", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(ChatDetailActivity.this,home.class));
+                    startActivity(new Intent(ChatDetailActivity.this, home.class));
                 }
                 break;
             case PERMISSION_ID:
@@ -416,8 +440,7 @@ public class ChatDetailActivity extends AppCompatActivity implements ScreenshotD
                     });
                 }
             }
-        }
-        else if (requestCode == 30) {
+        } else if (requestCode == 30) {
             if (data != null) {
                 if (data.getData() != null) {
                     Uri selectvideo = data.getData();
@@ -464,13 +487,12 @@ public class ChatDetailActivity extends AppCompatActivity implements ScreenshotD
                     });
                 }
             }
-        }
-        else if(requestCode==40) {
+        } else if (requestCode == 40) {
             Uri contactData = data.getData();
             Cursor c = getContentResolver().query(contactData, null, null, null, null);
             if (c.moveToFirst()) {
                 int phoneIndex = c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
-                int display_name= c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
+                int display_name = c.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME);
                 String num = c.getString(phoneIndex);
                 String name = c.getString(display_name);
 
@@ -518,8 +540,8 @@ public class ChatDetailActivity extends AppCompatActivity implements ScreenshotD
 
     @Override
     public void onScreenCaptured(String path) {
-        if(screenshot==0) {
-            screenshot=1;
+        if (screenshot == 0) {
+            screenshot = 1;
             Toast.makeText(this, "ScreenShot Was Captured", Toast.LENGTH_SHORT).show();
             String msg = binding.userMessage.getText().toString();
             final Message_Model model = new Message_Model(msg, senderId);
@@ -539,8 +561,7 @@ public class ChatDetailActivity extends AppCompatActivity implements ScreenshotD
                     firestore.collection("chats").document(ReceiverRoom).collection(ReceiverRoom).add(model).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                         @Override
                         public void onSuccess(DocumentReference documentReference) {
-                            chatAdapter.notifyDataSetChanged();
-                            screenshot=0;
+                            screenshot = 0;
                         }
                     });
                 }

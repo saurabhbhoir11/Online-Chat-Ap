@@ -53,7 +53,7 @@
                     android:layout_gravity="top"
                     android:layout_marginTop="2dp"
                     android:layout_weight="1"
-                    android:text="This is a last messae"
+                    android:text="Tap To Chat!!!"
                     android:textSize="16sp" />
 
                 <TextView

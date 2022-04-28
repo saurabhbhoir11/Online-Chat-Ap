@@ -81,7 +81,7 @@
                 android:tint="#FFFFFF" />
 
             <ImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/video_call"
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_marginLeft="5dp"

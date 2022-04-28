@@ -1,6 +1,7 @@
 package com.example.onlinechatapp;
 
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -28,14 +29,20 @@ public class OtherUserProfile extends AppCompatActivity {
 
         String username = getIntent().getStringExtra("username");
         String profile = getIntent().getStringExtra("profile");
-        String tagline =getIntent().getStringExtra("tagline");
+        String bio2 = getIntent().getStringExtra("bio");
         final String receiveId = getIntent().getStringExtra("userid");
 
         getSupportActionBar().setTitle(username);
 
         binding.username.setText(username);
+        if(!bio2.equals("null")) {
+            binding.bio.setText(bio2);
+        }
+        else {
+            binding.bio.setVisibility(View.GONE);
+            binding.bioHead.setVisibility(View.GONE);
+        }
         Glide.with(this).load(profile).placeholder(R.drawable.user).into(binding.dp);
-        binding.bio.setText(tagline);
 
     }
 }

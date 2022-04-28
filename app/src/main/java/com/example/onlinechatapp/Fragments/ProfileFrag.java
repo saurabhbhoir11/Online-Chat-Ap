@@ -1,6 +1,7 @@
 package com.example.onlinechatapp.Fragments;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -45,10 +46,10 @@ public class ProfileFrag extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding=FragmentProfileBinding.inflate(inflater,container,false);
-        firebaseStorage=FirebaseStorage.getInstance();
-        firestore=FirebaseFirestore.getInstance();
-        auth=FirebaseAuth.getInstance();
+        binding = FragmentProfileBinding.inflate(inflater, container, false);
+        firebaseStorage = FirebaseStorage.getInstance();
+        firestore = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
 
         firestore.collection("friends").document(auth.getCurrentUser().getUid()).collection("userid").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
@@ -60,15 +61,21 @@ public class ProfileFrag extends Fragment {
         firestore.collection("Users").document(auth.getCurrentUser().getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                Glide.with(getContext()).load(""+value.get("profilepic")).centerCrop().placeholder(R.drawable.user).into(binding.profileImage);
-                binding.profileName.setText(""+value.get("username"));
-                binding.userBio.setText(""+value.get("Bio"));
+                Glide.with(getContext()).load("" + value.get("profilepic")).centerCrop().placeholder(R.drawable.user).into(binding.profileImage);
+                binding.profileName.setText("" + value.get("username"));
+                if (String.valueOf(value.get("Bio")).equals("null")) {
+                    binding.userBio.setText("Write a bio to let others know about you");
+                    binding.userBio.setTextColor(Color.GRAY);
+                } else {
+                    binding.userBio.setText("" + value.get("Bio"));
+                    binding.userBio.setTextColor(Color.BLACK);
+                }
 
                 binding.editProf.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent intent=new Intent(getContext(), EditProfileActivity.class);
-                        intent.putExtra("username",String.valueOf(value.get("username")));
+                        Intent intent = new Intent(getContext(), EditProfileActivity.class);
+                        intent.putExtra("username", String.valueOf(value.get("username")));
                         startActivity(intent);
                     }
                 });
@@ -78,7 +85,7 @@ public class ProfileFrag extends Fragment {
         binding.profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent=new Intent();
+                Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_GET_CONTENT);
                 intent.setType("image/*");
                 startActivityForResult(intent, 33);
@@ -91,7 +98,7 @@ public class ProfileFrag extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==33) {
+        if (requestCode == 33) {
             if (data.getData() != null) {
                 Uri sfile = data.getData();
                 binding.profileImage.setImageURI(sfile);
@@ -125,7 +132,7 @@ public class ProfileFrag extends Fragment {
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }

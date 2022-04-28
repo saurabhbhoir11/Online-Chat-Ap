@@ -35,6 +35,7 @@ public class Login extends AppCompatActivity {
             }
         }
 
+
         binding.phoneLogin2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

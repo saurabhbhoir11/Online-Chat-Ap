@@ -2,8 +2,8 @@
 <resources>
     <array name="icons">
         <item>@drawable/picture</item>
-        <item>@drawable/video</item>
-        <item>@drawable/contact</item>
+        <item>@drawable/videocall</item>
+        <item>@drawable/call</item>
         <item>@drawable/documents</item>
         <item>@drawable/location</item>
     </array>

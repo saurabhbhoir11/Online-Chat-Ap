@@ -98,7 +98,7 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/textView17"
+                android:id="@+id/bio_head"
                 android:layout_width="match_parent"
                 android:layout_height="28dp"
                 android:layout_margin="10dp"

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -86,7 +87,6 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.viewholder> 
                         intent.putExtra("userId", users.getUserid());
                         intent.putExtra("profile", String.valueOf(value.get("profilepic")));
                         intent.putExtra("username", String.valueOf(value.get("username")));
-                        intent.putExtra("tagline", users.getTagline());
                         context.startActivity(intent);
                     }
                 });
@@ -98,6 +98,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.viewholder> 
                         intent.putExtra("userId", users.getUserid());
                         intent.putExtra("profile", String.valueOf(value.get("profilepic")));
                         intent.putExtra("username", String.valueOf(value.get("username")));
+                        intent.putExtra("bio", String.valueOf(value.get("Bio")));
                         context.startActivity(intent);
                     }
                 });

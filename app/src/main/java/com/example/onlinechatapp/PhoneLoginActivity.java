@@ -24,6 +24,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -120,12 +121,13 @@ public class PhoneLoginActivity extends AppCompatActivity {
                     hashMap.put("uid",user.getUid());
 
 
-                    firestore.collection("Users").document(user.getUid()).collection("username").addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    firestore.collection("Users").addSnapshotListener(new EventListener<QuerySnapshot>() {
                         @Override
                         public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                            if (value!=null){
-                                a=0;
-                            }
+                           if(!value.getDocuments().contains(user.getUid())){
+                               a=0;
+                           }
+
                         }
                     });
 
