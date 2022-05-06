@@ -19,7 +19,7 @@
         android:id="@+id/textView14"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="ONLIINE CHATTING APP"
+        android:text="S P Y K E"
         android:textColor="#5FC4BE"
         android:textSize="20sp"
         android:textStyle="bold"

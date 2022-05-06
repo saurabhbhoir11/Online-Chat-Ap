@@ -64,7 +64,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
                 intent.putExtra("userId", users.getUserid());
                 intent.putExtra("profile", users.getProfilepic());
                 intent.putExtra("username", users.getUsername());
-                intent.putExtra("tagline", users.getTagline());
                 context.startActivity(intent);
             }
         });

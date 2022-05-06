@@ -73,7 +73,7 @@ public class GroupChatAdapter extends RecyclerView.Adapter{
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         GroupChat grpmodel = GroupChatModel.get(position);
        if (holder.getClass() == SenderViewHolder.class) {
-            if (grpmodel.getMsg().equals("*Photo*")) {
+            if (grpmodel.getMsg().equals("$2y$10$39cSefzbHNYvvwTmQpmN2OTZ7jfX.vWd7QeSqgs9pRRWKU7zF7txm")) {
                 Glide.with(context).load(grpmodel.getImageUrl()).into(((SenderViewHolder) holder).photo);
                 ((SenderViewHolder) holder).photo.setVisibility(View.VISIBLE);
                 ((SenderViewHolder) holder).senderMsg.setVisibility(View.GONE);
@@ -110,6 +110,7 @@ public class GroupChatAdapter extends RecyclerView.Adapter{
             }
             //((SenderViewHolder) holder).sendertime.setText(grpmodel.getTime());
             ((SenderViewHolder) holder).senderMsg.setText(grpmodel.getMsg());
+            ((SenderViewHolder) holder).sendertime.setText(grpmodel.getTime());
 
         }
 
@@ -122,7 +123,7 @@ public class GroupChatAdapter extends RecyclerView.Adapter{
                }
            });
 
-            if(grpmodel.getMsg().equals("*Photo*")) {
+            if(grpmodel.getMsg().equals("$2y$10$39cSefzbHNYvvwTmQpmN2OTZ7jfX.vWd7QeSqgs9pRRWKU7zF7txm")) {
                 Glide.with(context).load(grpmodel.getImageUrl()).into(((RecieverViewHolder) holder).photos);
                 ((RecieverViewHolder) holder).photos.setVisibility(View.VISIBLE);
                 ((RecieverViewHolder) holder).recieverMsg.setVisibility(View.GONE);
@@ -147,6 +148,7 @@ public class GroupChatAdapter extends RecyclerView.Adapter{
             }
             //((RecieverViewHolder)holder).recievertime.setText(grpmodel.getTime());
             ((RecieverViewHolder) holder).recieverMsg.setText(grpmodel.getMsg());
+            ((RecieverViewHolder) holder).recievertime.setText(grpmodel.getTime());
             //FirebaseFirestore.getInstance().collection("Users").orderBy("userid").equals(grpmodel.getSender()).
 
         }

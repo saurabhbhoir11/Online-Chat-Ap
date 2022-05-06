@@ -192,63 +192,73 @@ public class ChatDetailActivity extends AppCompatActivity implements ScreenshotD
         binding.sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                notify = true;
-                String msg = String.valueOf(binding.userMessage.getText());
-                Message_Model message_model = new Message_Model(msg, senderId);
-                Calendar calendar = Calendar.getInstance();
-                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm aa");
-                String time = simpleDateFormat.format(calendar.getTime());
-                String timestamp = String.valueOf(System.currentTimeMillis());
-                message_model.setTimestamp(timestamp);
-                message_model.setTime(time);
+                if (!binding.userMessage.getText().toString().isEmpty()) {
+                    notify = true;
+                    String msg = String.valueOf(binding.userMessage.getText());
+                    Message_Model message_model = new Message_Model(msg, senderId);
+                    Calendar calendar = Calendar.getInstance();
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("hh:mm aa");
+                    String time = simpleDateFormat.format(calendar.getTime());
+                    String timestamp = String.valueOf(System.currentTimeMillis());
+                    message_model.setTimestamp(timestamp);
+                    message_model.setTime(time);
 
-                firestore.collection("Users").document(auth.getCurrentUser().getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                        myusername = String.valueOf(value.get("username"));
-                    }
-                });
+                    firestore.collection("Users").document(auth.getCurrentUser().getUid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                            myusername = String.valueOf(value.get("username"));
+                        }
+                    });
 
-                FirebaseFirestore.getInstance().collection("Users").document(receiverId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                        String token = String.valueOf(value.get("token"));
-                        MyFirebaseMessagingService.senPushNotification(msg, myusername, token, time);
-                    }
-                });
+                    FirebaseFirestore.getInstance().collection("Users").document(receiverId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                            String token = String.valueOf(value.get("token"));
+                            MyFirebaseMessagingService.senPushNotification(msg, myusername, token, time);
+                        }
+                    });
 
-                binding.userMessage.setText("");
+                    binding.userMessage.setText("");
 
-                firestore.collection("friends").document(auth.getCurrentUser().getUid()).collection("userid").document(receiverId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                        if (!value.exists()) {
-                            HashMap<String, Object> hashMap = new HashMap<>();
-                            hashMap.put("uid", senderId);
-                            hashMap.put("status", "0");
+                    firestore.collection("friends").document(auth.getCurrentUser().getUid()).collection("userid").document(receiverId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                            if (!value.exists()) {
+                                HashMap<String, Object> hashMap = new HashMap<>();
+                                hashMap.put("uid", senderId);
+                                hashMap.put("status", "0");
 
-                            firestore.collection("notifications").document(receiverId).collection("userid").document(senderId).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                firestore.collection("notifications").document(receiverId).collection("userid").document(senderId).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                        Toast.makeText(ChatDetailActivity.this, "Chat Request Sent Successfully", Toast.LENGTH_SHORT).show();
+                                        FirebaseFirestore.getInstance().collection("Users").document(receiverId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                                                String token = String.valueOf(value.get("token"));
+                                                MyFirebaseMessagingService.senPushNotification(myusername+" wants to chat with you!", "Chat Request", token, time);
+                                            }
+                                        });
+                                    }
+                                });
+                            }
+                        }
+                    });
+
+                    firestore.collection("chats").document(SenderRoom).collection(SenderRoom).add(message_model).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            firestore.collection("chats").document(ReceiverRoom).collection(ReceiverRoom).add(message_model).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                 @Override
-                                public void onSuccess(Void unused) {
-                                    Toast.makeText(ChatDetailActivity.this, "Chat Request Sent Successfully", Toast.LENGTH_SHORT).show();
+                                public void onSuccess(DocumentReference documentReference) {
+                                    chatAdapter.notifyDataSetChanged();
+                                    notify = false;
                                 }
                             });
                         }
-                    }
-                });
+                    });
 
-                firestore.collection("chats").document(SenderRoom).collection(SenderRoom).add(message_model).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        firestore.collection("chats").document(ReceiverRoom).collection(ReceiverRoom).add(message_model).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                            @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                chatAdapter.notifyDataSetChanged();
-                                notify = false;
-                            }
-                        });
-                    }
-                });
+                }
             }
         });
     }

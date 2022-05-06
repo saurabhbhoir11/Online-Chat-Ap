@@ -52,6 +52,10 @@ public class CreateGroup extends AppCompatActivity {
         binding = ActivityCreateGroupBinding.inflate(getLayoutInflater());
         super.onCreate(savedInstanceState);
         setContentView(binding.getRoot());
+        ProgressDialog pd = new ProgressDialog(CreateGroup.this);
+        pd.setTitle("Creating Group");
+        pd.setMessage("Please Wait...");
+        pd.setCancelable(false);
 
         actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
@@ -66,6 +70,7 @@ public class CreateGroup extends AppCompatActivity {
         binding.floatingActionButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                pd.show();
                 CreateGroup();
             }
         });
@@ -151,7 +156,6 @@ public class CreateGroup extends AppCompatActivity {
                         storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
-
                                 newGroup("" + g_timestamp, "" + grpTitle, "" + grpDescrptn, "" + uri.toString(), "" + type);
                             }
                         });
@@ -198,8 +202,9 @@ public class CreateGroup extends AppCompatActivity {
                         .set(hashMap1).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
+                        pd.dismiss();
                         Toast.makeText(CreateGroup.this, grpTitle + " ChatRoom Created", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(CreateGroup.this, MainActivity.class);
+                        Intent intent = new Intent(CreateGroup.this, home.class);
                         startActivity(intent);
                     }
                 }).addOnFailureListener(new OnFailureListener() {

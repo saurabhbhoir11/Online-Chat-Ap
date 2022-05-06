@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.onlinechatapp.Notifications.MyFirebaseMessagingService;
 import com.example.onlinechatapp.R;
 import com.example.onlinechatapp.models.Users;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -24,7 +25,9 @@ import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -82,6 +85,17 @@ public class AddPartiAdapter extends  RecyclerView.Adapter<AddPartiAdapter.ViewH
         hashMap.put("uid",users.getUserid());
         hashMap.put("role","participant");
         hashMap.put("timestamp",timestamp);
+
+        FirebaseFirestore.getInstance().collection("Users").document(users.getUserid()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+            @Override
+            public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                String token = String.valueOf(value.get("token"));
+                Calendar ctime = Calendar.getInstance();
+                SimpleDateFormat currenttime = new SimpleDateFormat("hh:mm:aa");
+                final String savetime = currenttime.format(ctime.getTime());
+                MyFirebaseMessagingService.senPushNotification("You were added to the group", "New Group", token, savetime);
+            }
+        });
 
         firestore.collection("groups").document(groupId).collection("Participants").document(users.getUserid()).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override

@@ -32,7 +32,9 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.ramotion.circlemenu.CircleMenuView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -65,7 +67,7 @@ public class GroupDetailedActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         binding = ActivityGroupDetailedBinding.inflate(getLayoutInflater());
         auth = FirebaseAuth.getInstance();
-        database=FirebaseFirestore.getInstance();
+        database = FirebaseFirestore.getInstance();
         super.onCreate(savedInstanceState);
         setContentView(binding.getRoot());
         getSupportActionBar().hide();
@@ -84,19 +86,55 @@ public class GroupDetailedActivity extends AppCompatActivity {
         namesAdapter = new NamesAdapter(list, GroupDetailedActivity.this);
         binding.nameCycle.setAdapter(namesAdapter);
 
+        binding.menuOps1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                binding.circleMenu.setVisibility(View.VISIBLE);
+
+                CountDownTimer countDownTimer = new CountDownTimer(10, 10) {
+                    @Override
+                    public void onTick(long l) {
+
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        binding.circleMenu.open(true);
+                    }
+                }.start();
+            }
+        });
+
+        binding.circleMenu.setEventListener(new CircleMenuView.EventListener() {
+            @Override
+            public void onButtonClickAnimationStart(@NonNull CircleMenuView view, int buttonIndex) {
+                super.onButtonClickAnimationStart(view, buttonIndex);
+                buttonClicked(buttonIndex);
+                binding.circleMenu.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onMenuCloseAnimationEnd(@NonNull CircleMenuView view) {
+                super.onMenuCloseAnimationEnd(view);
+                binding.circleMenu.setVisibility(View.GONE);
+            }
+        });
+
         binding.chatRecycle.onScrolled(0, 100);
         binding.sendBtn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String msg = binding.sendMsg2.getText().toString();
-                sendMessage(msg);
+                if (!binding.sendMsg2.getText().toString().isEmpty()) {
+                    String msg = binding.sendMsg2.getText().toString();
+                    sendMessage(msg);
+                }
             }
         });
         binding.linearTab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent1=new Intent(GroupDetailedActivity.this, ParticipantActivity.class);
-                intent1.putExtra("groupId",groupId);
+                Intent intent1 = new Intent(GroupDetailedActivity.this, ParticipantActivity.class);
+                intent1.putExtra("groupId", groupId);
                 startActivity(intent1);
 
             }
@@ -157,10 +195,14 @@ public class GroupDetailedActivity extends AppCompatActivity {
     }
 
     private void sendMessage(String msg) {
-        String time = "" + System.currentTimeMillis();
-        GroupChat grpmodel = new GroupChat(auth.getCurrentUser().getUid(), msg, time);
+        String timestamp = "" + System.currentTimeMillis();
+        GroupChat grpmodel = new GroupChat(auth.getCurrentUser().getUid(), msg, timestamp);
+        Calendar ctime = Calendar.getInstance();
+        SimpleDateFormat currenttime = new SimpleDateFormat("hh:mm:aa");
+        final String savetime = currenttime.format(ctime.getTime());
+        grpmodel.setTime(savetime);
 
-        database.collection("groups").document(groupId).collection("Messages").document(time).set(grpmodel).addOnSuccessListener(new OnSuccessListener<Void>() {
+        database.collection("groups").document(groupId).collection("Messages").document(timestamp).set(grpmodel).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
                 binding.sendMsg2.setText("");
@@ -174,7 +216,6 @@ public class GroupDetailedActivity extends AppCompatActivity {
     }
 
     private void buttonClicked(int index) {
-        Toast.makeText(this, "Clicked" + index, Toast.LENGTH_SHORT).show();
         if (index == 0) {
             Intent image = new Intent();
             image.setAction(Intent.ACTION_GET_CONTENT);
@@ -203,18 +244,18 @@ public class GroupDetailedActivity extends AppCompatActivity {
     }
 
     private void loadGroupInfo() {
-        Toast.makeText(this, ""+groupId, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "" + groupId, Toast.LENGTH_SHORT).show();
         database.collection("groups").document(groupId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
             @Override
             public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
                 String groupTitle = "" + value.get("groupTitle");
                 String groupDesc = "" + value.get("groupDesc");
-                String groupIcon = "" + value.get("groupIcon");
+                String groupIcon1 = "" + value.get("groupIcon");
                 String timestamp = "" + value.get("timestamp");
-               // String createdBy = "" + value.get("createdBy").toString();
+                // String createdBy = "" + value.get("createdBy").toString();
 
                 binding.groupTitle.setText(groupTitle);
-                Glide.with(GroupDetailedActivity.this).load(groupIcon).placeholder(R.drawable.user).into(binding.groupIcon);
+                Glide.with(GroupDetailedActivity.this).load(groupIcon1).placeholder(R.drawable.user).into(binding.groupIcon);
             }
         });
     }
@@ -237,14 +278,18 @@ public class GroupDetailedActivity extends AppCompatActivity {
                                     public void onSuccess(Uri uri) {
                                         String filepath = uri.toString();
                                         String msg = binding.sendMsg2.getText().toString();
-                                        String time = "" + System.currentTimeMillis();
-                                        GroupChat model = new GroupChat(auth.getCurrentUser().getUid(), msg, time);
-                                        model.setMsg("*Photo*");
+                                        String timestamp = "" + System.currentTimeMillis();
+                                        GroupChat model = new GroupChat(auth.getCurrentUser().getUid(), msg, timestamp);
+                                        Calendar ctime = Calendar.getInstance();
+                                        SimpleDateFormat currenttime = new SimpleDateFormat("hh:mm:aa");
+                                        final String savetime = currenttime.format(ctime.getTime());
+                                        model.setTime(savetime);
+                                        model.setMsg("$2y$10$39cSefzbHNYvvwTmQpmN2OTZ7jfX.vWd7QeSqgs9pRRWKU7zF7txm");
                                         model.setImageUrl(filepath);
                                         binding.sendMsg2.setText("");
 
 
-                                        database.collection("groups").document(groupId).collection("Messages").document(time).set(model).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        database.collection("groups").document(groupId).collection("Messages").document(timestamp).set(model).addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
                                                 binding.sendMsg2.setText("");
@@ -277,12 +322,16 @@ public class GroupDetailedActivity extends AppCompatActivity {
                                     public void onSuccess(Uri uri) {
                                         String filepath = uri.toString();
                                         String msg = binding.sendMsg2.getText().toString();
-                                        String time = "" + System.currentTimeMillis();
-                                        GroupChat model = new GroupChat(auth.getCurrentUser().getUid(), msg, time);
-                                        model.setMsg("*Video*");
+                                        String timestamp = "" + System.currentTimeMillis();
+                                        GroupChat model = new GroupChat(auth.getCurrentUser().getUid(), msg, timestamp);
+                                        Calendar ctime = Calendar.getInstance();
+                                        SimpleDateFormat currenttime = new SimpleDateFormat("hh:mm:aa");
+                                        final String savetime = currenttime.format(ctime.getTime());
+                                        model.setTime(savetime);
+                                        model.setMsg("$2y$10$4S0nmurvLkIkLbjnUZMrOu/IWViv87UzRB2v5hcBVzbGDUkw.3D..");
                                         model.setVideoUrl(filepath);
                                         binding.sendMsg2.setText("");
-                                        database.collection("groups").document(groupId).collection("Messages").document(time).set(model).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        database.collection("groups").document(groupId).collection("Messages").document(timestamp).set(model).addOnSuccessListener(new OnSuccessListener<Void>() {
                                             @Override
                                             public void onSuccess(Void aVoid) {
                                                 binding.sendMsg2.setText("");

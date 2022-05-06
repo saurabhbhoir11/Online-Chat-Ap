@@ -55,5 +55,4 @@ dependencies {
     implementation 'com.hbb20:ccp:2.5.0'
     implementation 'com.akexorcist:screenshotdetection:1.0.0'
     implementation 'com.airbnb.android:lottie:3.6.0'
-   // implementation ('org.jitsi.react:jitsi-meet-sdk:') { transitive = true }
 }

@@ -24,6 +24,8 @@
         android:layout_marginRight="25dp"
         android:layout_marginBottom="100dp"
         android:clickable="true"
-        android:src="@drawable/attachment" />
+        android:src="@drawable/crt_grp"
+        app:backgroundTint="#5FC4BE"
+        app:tint="#ffffff" />
 
 </FrameLayout>

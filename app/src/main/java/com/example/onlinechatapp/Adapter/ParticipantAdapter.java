@@ -86,8 +86,6 @@ public class ParticipantAdapter extends RecyclerView.Adapter<ParticipantAdapter.
                 intent.putExtra("username", users.getUsername());
                 intent.putExtra("profile", users.getProfilepic());
                 intent.putExtra("userId", users.getUserid());
-                intent.putExtra("tagline", users.getTagline());
-                intent.putExtra("follow", users.getFollow());
                 context.startActivity(intent);
             }
         });
