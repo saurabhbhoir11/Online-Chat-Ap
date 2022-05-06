@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.DatePicker;
@@ -101,6 +102,7 @@ public class EditProfileActivity extends AppCompatActivity {
                         }
                     });
                 }
+                startActivity(new Intent(EditProfileActivity.this,home.class));
             }
         });
     }

@@ -1,5 +1,7 @@
 package com.example.onlinechatapp.Fragments;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -9,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +19,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.onlinechatapp.EditProfileActivity;
+import com.example.onlinechatapp.Login;
 import com.example.onlinechatapp.R;
 import com.example.onlinechatapp.databinding.FragmentProfileBinding;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -50,6 +54,30 @@ public class ProfileFrag extends Fragment {
         firebaseStorage = FirebaseStorage.getInstance();
         firestore = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
+
+        binding.logoutBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                auth.signOut();
+                ProgressDialog pd = new ProgressDialog(getContext());
+                pd.setMessage("Logging Out...");
+                CountDownTimer countDownTimer = new CountDownTimer(1000, 1000) {
+                    @Override
+                    public void onTick(long l) {
+                        pd.show();
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        pd.dismiss();
+                        Intent intent = new Intent(getContext(), Login.class);
+                        startActivity(intent);
+                        getActivity().finish();
+                    }
+                }.start();
+
+            }
+        });
 
         firestore.collection("friends").document(auth.getCurrentUser().getUid()).collection("userid").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override

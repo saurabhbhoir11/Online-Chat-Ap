@@ -64,15 +64,6 @@ public class home extends AppCompatActivity {
                 });
 
 
-        binding.floatingActionButton3.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                auth.signOut();
-                startActivity(new Intent(home.this,Login.class));
-                return false;
-            }
-        });
-
         binding.viewpager.setAdapter(new FragmentsAdapter(getSupportFragmentManager()));
         binding.tabLayout.setupWithViewPager(binding.viewpager);
         binding.tabLayout.setSelectedTabIndicatorColor(Color.WHITE);

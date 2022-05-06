@@ -40,7 +40,8 @@
                 android:ems="10"
                 android:hint="Email"
                 android:inputType="textEmailAddress"
-                android:paddingLeft="10dp" />
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp" />
 
             <EditText
                 android:id="@+id/pass1"
@@ -52,20 +53,20 @@
                 android:ems="10"
                 android:hint="Password"
                 android:inputType="textPassword"
-                android:paddingLeft="10dp" />
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp" />
 
             <Button
                 android:id="@+id/login_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_marginLeft="25dp"
                 android:layout_marginTop="20dp"
+                android:layout_marginRight="25dp"
+                android:background="@drawable/sender_bubble"
                 android:backgroundTint="#5AD1F9"
                 android:elevation="5dp"
                 android:gravity="center"
-                android:paddingLeft="20dp"
-                android:paddingTop="10dp"
-                android:paddingRight="20dp"
-                android:paddingBottom="10dp"
                 android:text="Login"
                 android:textColor="#FFFFFF"
                 app:cornerRadius="10dp" />
@@ -76,7 +77,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
-                android:text="Not A Member Of Chatar? Click Here To Register"
+                android:text="Not A Member Of Spyke? Click Here To Register"
                 android:textColor="#2c2c2c" />
 
         </LinearLayout>

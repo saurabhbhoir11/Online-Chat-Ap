@@ -85,10 +85,10 @@ public class Register extends AppCompatActivity {
                     binding.password.setError("The Password must be at least 6 characters");
                     return;
                 }
-                /*else if(!binding.password.getText().toString().equals(binding.confPass.getText().toString())){
+                else if(!binding.password.getText().toString().equals(binding.confPass.getText().toString())){
                     binding.confPass.setError("The Passwords does not match");
                     return;
-                }*/
+                }
                 else {
                     auth.createUserWithEmailAndPassword(binding.email.getText().toString(), binding.password.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
