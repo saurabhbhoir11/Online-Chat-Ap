@@ -26,10 +26,13 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.HashMap;
 
 public class Login extends AppCompatActivity {
     ActivityLoginBinding binding;
@@ -37,6 +40,7 @@ public class Login extends AppCompatActivity {
     FirebaseAuth auth;
     private GoogleSignInClient mGoogleSigninClient;
     FirebaseFirestore firestore;
+    int a = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +48,7 @@ public class Login extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         auth = FirebaseAuth.getInstance();
-        firestore=FirebaseFirestore.getInstance();
+        firestore = FirebaseFirestore.getInstance();
 
         if (auth.getCurrentUser() != null) {
 
@@ -101,81 +105,88 @@ public class Login extends AppCompatActivity {
     }
 
 
-        private void createRequest() {
-            GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                    .requestIdToken("933779368906-p5vlkrrt0mbas6q8lcde1ipcjdv7b84o.apps.googleusercontent.com")
-                    .requestEmail()
-                    .build();
+    private void createRequest() {
+        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken("933779368906-p5vlkrrt0mbas6q8lcde1ipcjdv7b84o.apps.googleusercontent.com")
+                .requestEmail()
+                .build();
 
-            mGoogleSigninClient = GoogleSignIn.getClient(this, googleSignInOptions);
-        }
+        mGoogleSigninClient = GoogleSignIn.getClient(this, googleSignInOptions);
+    }
 
-        private void signIn() {
-            Intent intent = mGoogleSigninClient.getSignInIntent();
-            startActivityForResult(intent, RC_SIGN_IN);
-        }
+    private void signIn() {
+        Intent intent = mGoogleSigninClient.getSignInIntent();
+        startActivityForResult(intent, RC_SIGN_IN);
+    }
 
-        @Override
-        protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-            super.onActivityResult(requestCode, resultCode, data);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-            if (requestCode == RC_SIGN_IN) {
-                Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-                try {
-                    GoogleSignInAccount account = task.getResult();
-                    firebaseAuthWithGoogle(account);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        if (requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                GoogleSignInAccount account = task.getResult();
+                firebaseAuthWithGoogle(account);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
+    }
 
-        private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
+    private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
 
-            AuthCredential firebaseCredential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
-            auth.signInWithCredential(firebaseCredential)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                // Sign in success, update UI with the signed-in user's information
-                                Log.d(TAG, "signInWithCredential:success");
-                                FirebaseUser user = auth.getCurrentUser();
-                                Users users=new Users();
-                                users.setUserid(user.getUid());
-                                GoogleSignInAccount signInAccount=GoogleSignIn.getLastSignedInAccount(Login.this);
-                                if(signInAccount!=null){
-                                    users.setName(signInAccount.getDisplayName());
-                                    users.setMail(signInAccount.getEmail());
-                                    if(signInAccount.getPhotoUrl()!=null){
-                                        users.setProfilepic(String.valueOf(signInAccount.getPhotoUrl()));
-                                    }
-                                    Toast.makeText(Login.this, ""+user.getUid(), Toast.LENGTH_SHORT).show();
-                                    firestore.collection("Users").document(user.getUid()).set(users).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void unused) {
-                                            firestore.collection("Users").document(user.getUid()).collection("username").addSnapshotListener(new EventListener<QuerySnapshot>() {
+        AuthCredential firebaseCredential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+        auth.signInWithCredential(firebaseCredential)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "signInWithCredential:success");
+                            FirebaseUser user = auth.getCurrentUser();
+                            Users users = new Users();
+                            users.setUserid(user.getUid());
+                            GoogleSignInAccount signInAccount = GoogleSignIn.getLastSignedInAccount(Login.this);
+                            if (signInAccount != null) {
+                                firestore.collection("Users").addSnapshotListener(new EventListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                        for (DocumentSnapshot snapshot : value) {
+                                            if (auth.getCurrentUser().getUid().equals(snapshot.get("userid"))) {
+                                                a = 1;
+                                                break;
+                                            }
+                                        }
+                                        if (a == 1) {
+                                            HashMap<String, Object> hashMap = new HashMap<>();
+                                            hashMap.put("name", signInAccount.getDisplayName());
+                                            if (signInAccount.getPhotoUrl() != null) {
+                                                hashMap.put("profilepic", signInAccount.getPhotoUrl().toString());
+                                            }
+                                            firestore.collection("Users").document(auth.getCurrentUser().getUid()).update(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
-                                                public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                                                    if (value!=null){
-                                                        startActivity(new Intent(Login.this, usernameactivity.class));
-                                                    }
-                                                    else{
-                                                        startActivity(new Intent(Login.this, home.class));
-                                                    }
+                                                public void onSuccess(Void unused) {
+                                                    startActivity(new Intent(Login.this, home.class));
                                                 }
                                             });
                                         }
-                                    });
-                                }
-
-                            } else {
-                                // If sign in fails, display a message to the user.
-                                Log.w(TAG, "signInWithCredential:failure", task.getException());
-
+                                        else {
+                                            Toast.makeText(Login.this, "No such account found, Please Register First", Toast.LENGTH_SHORT).show();
+                                            startActivity(new Intent(Login.this,Register.class));
+                                            finish();
+                                        }
+                                    }
+                                });
                             }
+
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+
                         }
-                    });
+                    }
+                });
     }
 
 }

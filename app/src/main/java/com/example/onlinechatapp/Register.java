@@ -28,6 +28,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
@@ -41,7 +42,8 @@ public class Register extends AppCompatActivity {
     FirebaseAuth auth;
     FirebaseFirestore firestore;
     FirebaseUser user;
-    int a=1;
+    int a = 1;
+    int b=0;
 
     private static final int REQ_ONE_TAP = 2;  // Can be any integer unique to the Activity.
     private boolean showOneTapUI = true;
@@ -84,12 +86,10 @@ public class Register extends AppCompatActivity {
                 } else if (binding.password.getText().length() < 6) {
                     binding.password.setError("The Password must be at least 6 characters");
                     return;
-                }
-                else if(!binding.password.getText().toString().equals(binding.confPass.getText().toString())){
+                } else if (!binding.password.getText().toString().equals(binding.confPass.getText().toString())) {
                     binding.confPass.setError("The Passwords does not match");
                     return;
-                }
-                else {
+                } else {
                     auth.createUserWithEmailAndPassword(binding.email.getText().toString(), binding.password.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
@@ -169,34 +169,43 @@ public class Register extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = auth.getCurrentUser();
-                            Users users=new Users();
+                            Users users = new Users();
                             users.setUserid(user.getUid());
-                            GoogleSignInAccount signInAccount=GoogleSignIn.getLastSignedInAccount(Register.this);
-                            if(signInAccount!=null){
-                                users.setName(signInAccount.getDisplayName());
-                                users.setMail(signInAccount.getEmail());
-                                if(signInAccount.getPhotoUrl()!=null){
-                                    users.setProfilepic(String.valueOf(signInAccount.getPhotoUrl()));
-                                }
-                                Toast.makeText(Register.this, ""+user.getUid(), Toast.LENGTH_SHORT).show();
-                                firestore.collection("Users").document(user.getUid()).set(users).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            GoogleSignInAccount signInAccount = GoogleSignIn.getLastSignedInAccount(Register.this);
+                            if (signInAccount != null) {
+                                firestore.collection("Users").addSnapshotListener(new EventListener<QuerySnapshot>() {
                                     @Override
-                                    public void onSuccess(Void unused) {
-                                        firestore.collection("Users").document(user.getUid()).collection("username").addSnapshotListener(new EventListener<QuerySnapshot>() {
-                                            @Override
-                                            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                                                if (value!=null){
+                                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                                        for (DocumentSnapshot snapshot : value) {
+                                            if (auth.getCurrentUser().getUid().equals(snapshot.get("userid"))) {
+                                                b = 1;
+                                                break;
+                                            }
+                                        }
+                                        if (b != 1) {
+                                            HashMap<String, Object> hashMap = new HashMap<>();
+                                            hashMap.put("name", signInAccount.getDisplayName());
+                                            hashMap.put("mail", signInAccount.getEmail());
+                                            if (signInAccount.getPhotoUrl() != null) {
+                                                hashMap.put("profilepic", signInAccount.getPhotoUrl().toString());
+                                            }
+                                            Toast.makeText(Register.this, "" + user.getUid(), Toast.LENGTH_SHORT).show();
+                                            firestore.collection("Users").document(user.getUid()).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void unused) {
                                                     startActivity(new Intent(Register.this, usernameactivity.class));
                                                 }
-                                                else{
-                                                    startActivity(new Intent(Register.this, home.class));
-                                                }
-                                            }
-                                        });
+                                            });
+                                        }
+                                        else {
+                                            Toast.makeText(Register.this, "This Email Is Already Registered", Toast.LENGTH_SHORT).show();
+                                            startActivity(new Intent(Register.this,Login.class));
+                                            finish();
+                                        }
                                     }
+
                                 });
                             }
-
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
