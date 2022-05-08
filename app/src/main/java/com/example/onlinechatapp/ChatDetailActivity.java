@@ -210,14 +210,6 @@ public class ChatDetailActivity extends AppCompatActivity implements ScreenshotD
                         }
                     });
 
-                    FirebaseFirestore.getInstance().collection("Users").document(receiverId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
-                        @Override
-                        public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
-                            String token = String.valueOf(value.get("token"));
-                            MyFirebaseMessagingService.senPushNotification(msg, myusername, token, time);
-                        }
-                    });
-
                     binding.userMessage.setText("");
 
                     firestore.collection("friends").document(auth.getCurrentUser().getUid()).collection("userid").document(receiverId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -242,19 +234,27 @@ public class ChatDetailActivity extends AppCompatActivity implements ScreenshotD
                                     }
                                 });
                             }
-                        }
-                    });
-
-                    firestore.collection("chats").document(SenderRoom).collection(SenderRoom).add(message_model).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                        @Override
-                        public void onSuccess(DocumentReference documentReference) {
-                            firestore.collection("chats").document(ReceiverRoom).collection(ReceiverRoom).add(message_model).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                @Override
-                                public void onSuccess(DocumentReference documentReference) {
-                                    chatAdapter.notifyDataSetChanged();
-                                    notify = false;
-                                }
-                            });
+                            else {
+                                firestore.collection("chats").document(SenderRoom).collection(SenderRoom).add(message_model).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                    @Override
+                                    public void onSuccess(DocumentReference documentReference) {
+                                        firestore.collection("chats").document(ReceiverRoom).collection(ReceiverRoom).add(message_model).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                            @Override
+                                            public void onSuccess(DocumentReference documentReference) {
+                                                chatAdapter.notifyDataSetChanged();
+                                                notify = false;
+                                                FirebaseFirestore.getInstance().collection("Users").document(receiverId).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                                                    @Override
+                                                    public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                                                        String token = String.valueOf(value.get("token"));
+                                                        MyFirebaseMessagingService.senPushNotification(msg, myusername, token, time);
+                                                    }
+                                                });
+                                            }
+                                        });
+                                    }
+                                });
+                            }
                         }
                     });
 

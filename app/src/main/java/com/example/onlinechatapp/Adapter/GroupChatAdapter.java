@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -146,7 +147,6 @@ public class GroupChatAdapter extends RecyclerView.Adapter{
                 ((RecieverViewHolder) holder).recieverMsg.setVisibility(View.VISIBLE);
               //  ((RecieverViewHolder) holder).reclayout.setVisibility(View.VISIBLE);
             }
-            //((RecieverViewHolder)holder).recievertime.setText(grpmodel.getTime());
             ((RecieverViewHolder) holder).recieverMsg.setText(grpmodel.getMsg());
             ((RecieverViewHolder) holder).recievertime.setText(grpmodel.getTime());
             //FirebaseFirestore.getInstance().collection("Users").orderBy("userid").equals(grpmodel.getSender()).
@@ -161,7 +161,7 @@ public class GroupChatAdapter extends RecyclerView.Adapter{
 
     public class RecieverViewHolder extends RecyclerView.ViewHolder {
         TextView recieverMsg, recievertime,sendname;
-        ImageView photos,send_prof;
+        ImageView send_prof,photos;
         public RecieverViewHolder(@NonNull View itemView) {
             super(itemView);
             recieverMsg = itemView.findViewById(R.id.rec_msg2);
