@@ -201,6 +201,7 @@ public class GroupDetailedActivity extends AppCompatActivity {
         SimpleDateFormat currenttime = new SimpleDateFormat("hh:mm:aa");
         final String savetime = currenttime.format(ctime.getTime());
         grpmodel.setTime(savetime);
+        grpmodel.setTimestamp(timestamp);
 
         database.collection("groups").document(groupId).collection("Messages").document(timestamp).set(grpmodel).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
@@ -284,6 +285,7 @@ public class GroupDetailedActivity extends AppCompatActivity {
                                         SimpleDateFormat currenttime = new SimpleDateFormat("hh:mm:aa");
                                         final String savetime = currenttime.format(ctime.getTime());
                                         model.setTime(savetime);
+                                        model.setTimestamp(timestamp);
                                         model.setMsg("$2y$10$39cSefzbHNYvvwTmQpmN2OTZ7jfX.vWd7QeSqgs9pRRWKU7zF7txm");
                                         model.setImageUrl(filepath);
                                         binding.sendMsg2.setText("");
@@ -324,6 +326,7 @@ public class GroupDetailedActivity extends AppCompatActivity {
                                         String msg = binding.sendMsg2.getText().toString();
                                         String timestamp = "" + System.currentTimeMillis();
                                         GroupChat model = new GroupChat(auth.getCurrentUser().getUid(), msg, timestamp);
+                                        model.setTimestamp(timestamp);
                                         Calendar ctime = Calendar.getInstance();
                                         SimpleDateFormat currenttime = new SimpleDateFormat("hh:mm:aa");
                                         final String savetime = currenttime.format(ctime.getTime());

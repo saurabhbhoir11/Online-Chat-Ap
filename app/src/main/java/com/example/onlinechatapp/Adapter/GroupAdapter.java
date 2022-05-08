@@ -9,18 +9,26 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.onlinechatapp.GroupDetailedActivity;
 import com.example.onlinechatapp.R;
 import com.example.onlinechatapp.models.GroupModel;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
 public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.HolderGroupAdapter> {
     private Context context;
     private ArrayList<GroupModel> GroupList;
+    FirebaseFirestore firestore;
 
     public GroupAdapter(Context context, ArrayList<GroupModel> GroupList) {
         this.context = context;
@@ -37,6 +45,35 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.HolderGroupA
     @Override
     public void onBindViewHolder(@NonNull HolderGroupAdapter holder, int position) {
         GroupModel model = GroupList.get(position);
+        firestore= FirebaseFirestore.getInstance();
+
+        firestore.collection("groups").document(model.getGroupId()).collection("Messages").orderBy("timestamp").limitToLast(1).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                for(DocumentSnapshot snapshot: value.getDocuments()){
+                    if(snapshot.get("msg").toString().equals("$2y$10$39cSefzbHNYvvwTmQpmN2OTZ7jfX.vWd7QeSqgs9pRRWKU7zF7txm")){
+                        holder.lastmsg.setText("\uD83D\uDCF7 Photo");
+                    }
+                    else if(snapshot.get("msg").toString().equals("$ncw$&nwcbwcwjdd!@cnwkcScwxj#5cjwc9qw8dw5cn")){
+                        holder.lastmsg.setText("\uD83D\uDCCD Location");
+                    }
+                    else if(snapshot.get("msg").toString().equals("%msjCkvjx08GH#mc0*mxvhvx4VHs13Nch!cnq-nss.uyCX7xvC")){
+                        holder.lastmsg.setText("\uD83D\uDCDE Contact");
+                    }
+                    else {
+                        holder.lastmsg.setText(snapshot.get("msg").toString());
+                    }
+                    holder.time.setText(snapshot.get("time").toString());
+                    firestore.collection("Users").document(snapshot.get("sender").toString()).addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                        @Override
+                        public void onEvent(@Nullable DocumentSnapshot value, @Nullable FirebaseFirestoreException error) {
+                            holder.sender.setText(value.get("username").toString()+": ");
+                        }
+                    });
+                }
+            }
+        });
+
         String groupId = model.getGroupId();
         String groupIcon = model.getGroupIcon();
         holder.grpTitle.setText(model.getGroupTitle());

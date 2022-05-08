@@ -168,6 +168,7 @@ public class Login extends AppCompatActivity {
                                                 @Override
                                                 public void onSuccess(Void unused) {
                                                     startActivity(new Intent(Login.this, home.class));
+                                                    finish();
                                                 }
                                             });
                                         }

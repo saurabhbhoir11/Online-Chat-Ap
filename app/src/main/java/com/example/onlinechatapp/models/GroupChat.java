@@ -1,7 +1,7 @@
 package com.example.onlinechatapp.models;
 
 public class GroupChat {
-    String msg,sender,time,ImageUrl,VideoUrl,WebUrl, Stickers,audioUrl,systemmsg;
+    String msg,sender,time,ImageUrl,VideoUrl,WebUrl, Stickers,audioUrl,timestamp;
 
 
     public GroupChat(String sender, String msg, String time) {
@@ -17,12 +17,12 @@ public class GroupChat {
 
     public GroupChat(){}
 
-    public String getSystemmsg() {
-        return systemmsg;
+    public String getTimestamp() {
+        return timestamp;
     }
 
-    public void setSystemmsg(String systemmsg) {
-        this.systemmsg = systemmsg;
+    public void setTimestamp(String timestamp) {
+        this.timestamp =timestamp;
     }
 
     public String getMsg() {
