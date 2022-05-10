@@ -186,10 +186,11 @@ public class Register extends AppCompatActivity {
                                             HashMap<String, Object> hashMap = new HashMap<>();
                                             hashMap.put("name", signInAccount.getDisplayName());
                                             hashMap.put("mail", signInAccount.getEmail());
+                                            hashMap.put("userid", user.getUid());
+                                            hashMap.put("username",null);
                                             if (signInAccount.getPhotoUrl() != null) {
                                                 hashMap.put("profilepic", signInAccount.getPhotoUrl().toString());
                                             }
-                                            Toast.makeText(Register.this, "" + user.getUid(), Toast.LENGTH_SHORT).show();
                                             firestore.collection("Users").document(user.getUid()).set(hashMap).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void unused) {
